@@ -1,6 +1,9 @@
 "! <p class="shorttext synchronized">Standard implementation of ZIF_PRC_MESSAGE_HANDLER</p>
 "!
 "! One instance per unit of work. Not reusable after being sealed.
+"!
+"! Severities: W, I and S are kept. Everything else (E, A, X, ...) is treated
+"! and stored as error E, see NORMALIZE_SEVERITY.
 CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
 
   PUBLIC SECTION.
@@ -25,6 +28,15 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
     METHODS append_messages    IMPORTING i_messages TYPE zcl_prc_message_mapper=>tt_messages.
     METHODS set_message_header IMPORTING i_header   TYPE symsg.
 
+    "! Internal severity of a message: W, I and S are kept, everything else
+    "! (E, A, X, ...) becomes E. Used for every message entering the handler,
+    "! so all errors are stored and evaluated in the same way.
+    "!
+    "! @parameter i_msgty | Severity as delivered by the caller.
+    "! @parameter r_msgty | W, I, S or E.
+    METHODS normalize_severity IMPORTING i_msgty        TYPE symsgty
+                               RETURNING VALUE(r_msgty) TYPE symsgty.
+
     DATA m_bali_log           TYPE REF TO if_bali_log.
     DATA m_log_message_prefix TYPE symsg.
 ENDCLASS.
@@ -33,6 +45,7 @@ ENDCLASS.
 CLASS zcl_prc_message_handler IMPLEMENTATION.
   METHOD append_message.
     APPEND CORRESPONDING #( i_message ) TO mt_messages ASSIGNING FIELD-SYMBOL(<fs>).
+    <fs>-msgty = normalize_severity( <fs>-msgty ).
 
     MESSAGE ID <fs>-msgid
             TYPE <fs>-msgty
@@ -78,8 +91,15 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     RAISE EXCEPTION NEW zcx_prc_unit_of_work_failed( ).
   ENDMETHOD.
 
+  METHOD normalize_severity.
+    r_msgty = COND #( WHEN i_msgty = 'W' OR i_msgty = 'I' OR i_msgty = 'S'
+                      THEN i_msgty
+                      ELSE 'E' ).
+  ENDMETHOD.
+
   METHOD set_message_header.
     ms_header = CORRESPONDING #( i_header ).
+    ms_header-msgty = normalize_severity( ms_header-msgty ).
 
     MESSAGE ID ms_header-msgid
             TYPE ms_header-msgty
@@ -107,9 +127,11 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     r_message_handler = me.
 
     DATA(lt_msg) = zcl_prc_message_mapper=>from_bapiret( i_bapiret ).
+    LOOP AT lt_msg ASSIGNING FIELD-SYMBOL(<ls_msg>).
+      <ls_msg>-msgty = normalize_severity( <ls_msg>-msgty ).
+    ENDLOOP.
     append_messages( lt_msg ).
-    IF line_exists( lt_msg[ msgty = 'A' ] ) OR ( i_fail_on_error_message = abap_true AND line_exists(
-                                                                                             lt_msg[ msgty = 'E' ] ) ).
+    IF i_fail_on_error_message = abap_true AND line_exists( lt_msg[ msgty = 'E' ] ).
       fail( ).
     ENDIF.
   ENDMETHOD.
@@ -119,6 +141,9 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
 
     IF i_reported IS SUPPLIED.
       DATA(lt_msg) = zcl_prc_message_mapper=>from_reported( i_reported ).
+      LOOP AT lt_msg ASSIGNING FIELD-SYMBOL(<ls_msg>).
+        <ls_msg>-msgty = normalize_severity( <ls_msg>-msgty ).
+      ENDLOOP.
       append_messages( lt_msg ).
       IF i_fail_on_error_message = abap_true AND line_exists( lt_msg[ msgty = 'E' ] ).
         fail( ).
@@ -134,8 +159,9 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     r_message_handler = me.
 
     DATA(ls_msg) = CORRESPONDING symsg( sy ).
+    ls_msg-msgty = normalize_severity( ls_msg-msgty ).
     append_message( ls_msg ).
-    IF ls_msg-msgty = 'A' OR ( i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E' ).
+    IF i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E'.
       fail( ).
     ENDIF.
   ENDMETHOD.
@@ -145,9 +171,9 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
 
     DATA(ls_msg) = zcl_prc_message_mapper=>from_text( text  = i_message_text
                                                       msgty = i_message_severity ).
+    ls_msg-msgty = normalize_severity( ls_msg-msgty ).
     append_message( ls_msg ).
-
-    IF ls_msg-msgty = 'A' OR ( i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E' ).
+    IF i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E'.
       fail( ).
     ENDIF.
   ENDMETHOD.
