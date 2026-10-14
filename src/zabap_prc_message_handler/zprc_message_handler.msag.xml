@@ -7,16 +7,6 @@
     <MASTERLANG>E</MASTERLANG>
     <STEXT>Message Handler Messages</STEXT>
    </T100A>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <T100T>
-    <T100T>
-     <SPRSL>D</SPRSL>
-     <ARBGB>ZPRC_MESSAGE_HANDLER</ARBGB>
-     <STEXT>Message-Handler Nachrichten</STEXT>
-    </T100T>
-   </T100T>
   </asx:values>
  </asx:abap>
 </abapGit>

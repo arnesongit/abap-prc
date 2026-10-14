@@ -1,0 +1,20 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: DTEL/ZPRC_DEMO_ERROR_STATUS/SCRTEXT_S, maxlen=10
+msgid "Error"
+msgstr "Fehler"
+
+#: DTEL/ZPRC_DEMO_ERROR_STATUS/REPTEXT, maxlen=55
+#: DTEL/ZPRC_DEMO_ERROR_STATUS/SCRTEXT_L, maxlen=40
+#: DTEL/ZPRC_DEMO_ERROR_STATUS/SCRTEXT_M, maxlen=20
+msgid "Error Status"
+msgstr "Fehlerstatus"
+
+#: DTEL/ZPRC_DEMO_ERROR_STATUS/DDTEXT, maxlen=60
+msgid "Lifecycelstatus"
+msgstr "Lifecycle Status"

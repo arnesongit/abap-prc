@@ -23,19 +23,6 @@
    <DD04L_EXTRA>
     <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </DD04L_EXTRA>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <DD04_TEXTS>
-    <item>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>E-Mail-Adresse</DDTEXT>
-     <REPTEXT>E-Mail-Adresse</REPTEXT>
-     <SCRTEXT_S>E-Mail</SCRTEXT_S>
-     <SCRTEXT_M>E-Mail-Adresse</SCRTEXT_M>
-     <SCRTEXT_L>E-Mail-Adresse</SCRTEXT_L>
-    </item>
-   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

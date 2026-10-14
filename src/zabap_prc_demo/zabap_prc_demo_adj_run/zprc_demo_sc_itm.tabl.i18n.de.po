@@ -1,0 +1,10 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: TABT/ZPRC_DEMO_SC_ITM/1_DD02T A, maxlen=60
+msgid "Database Table for ZSERVICEITEM"
+msgstr "DB-Tabelle für ZSERVICEITEM"

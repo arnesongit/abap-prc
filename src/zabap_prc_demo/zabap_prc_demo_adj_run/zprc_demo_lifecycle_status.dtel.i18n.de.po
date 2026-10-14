@@ -1,0 +1,20 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: DTEL/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT, maxlen=60
+msgid "Lifecycelstatus"
+msgstr "Lifecycle Status"
+
+#: DTEL/ZPRC_DEMO_LIFECYCLE_STATUS/SCRTEXT_S, maxlen=10
+msgid "Lifecycle"
+msgstr "Lifecycle"
+
+#: DTEL/ZPRC_DEMO_LIFECYCLE_STATUS/REPTEXT, maxlen=55
+#: DTEL/ZPRC_DEMO_LIFECYCLE_STATUS/SCRTEXT_L, maxlen=40
+#: DTEL/ZPRC_DEMO_LIFECYCLE_STATUS/SCRTEXT_M, maxlen=20
+msgid "Lifecycle Status"
+msgstr "Lifecycle Status"

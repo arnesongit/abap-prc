@@ -23,19 +23,6 @@
    <DD04L_EXTRA>
     <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </DD04L_EXTRA>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <DD04_TEXTS>
-    <item>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>Prozess-Name</DDTEXT>
-     <REPTEXT>Prozess-Name</REPTEXT>
-     <SCRTEXT_S>Proz-Name</SCRTEXT_S>
-     <SCRTEXT_M>Prozess-Name</SCRTEXT_M>
-     <SCRTEXT_L>Prozess-Name</SCRTEXT_L>
-    </item>
-   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

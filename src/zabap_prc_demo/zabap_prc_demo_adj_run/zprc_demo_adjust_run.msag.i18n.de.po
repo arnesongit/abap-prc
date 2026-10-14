@@ -1,0 +1,34 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MSAG/ZPRC_DEMO_ADJUST_RUN/STEXT, maxlen=60
+msgid "Adjustment Run"
+msgstr "Anpassungs-Lauf"
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN003/TEXT, maxlen=73
+msgid "Billing plan overlap, settlement period violates item contract duration."
+msgstr "Faktura-Plan Periode stimmt nicht überein."
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN002/TEXT, maxlen=73
+msgid "Contract &1 - &2: rate component adjusted."
+msgstr "Kontrakt &1 - &2: Rabatt angepasst."
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN004/TEXT, maxlen=73
+msgid "Contract &1: Locked by another user."
+msgstr "Kontrakt &1: Gesperrt durch einen anderen Benutzer."
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN006/TEXT, maxlen=73
+msgid "Contract &1: Successfully processed."
+msgstr "Kontrakt &1: Erfolgreich verarbeitet"
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN005/TEXT, maxlen=73
+msgid "Contract &1: Sum of billing plan items deviates from item net value."
+msgstr "Kontrakt &1: Rechnungssummen passen nicht zu den Positionen"
+
+#: MESS/ZPRC_DEMO_ADJUST_RUN001/TEXT, maxlen=73
+msgid "No rate components to process."
+msgstr "Keine Rabatte zu bearbeiten."

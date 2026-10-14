@@ -15,23 +15,6 @@
      <TEXT>&amp;1 &amp;2</TEXT>
     </T100>
    </T100>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <T100T>
-    <T100T>
-     <SPRSL>D</SPRSL>
-     <ARBGB>ZPRC_MSG_HANDLR_TEST</ARBGB>
-     <STEXT>Messge-Handler Nachrichten zum Testen</STEXT>
-    </T100T>
-   </T100T>
-   <T100_TEXTS>
-    <item>
-     <SPRSL>D</SPRSL>
-     <MSGNR>001</MSGNR>
-     <TEXT>&amp;1 &amp;2</TEXT>
-    </item>
-   </T100_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

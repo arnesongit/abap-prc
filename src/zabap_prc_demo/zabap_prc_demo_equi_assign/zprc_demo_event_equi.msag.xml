@@ -33,38 +33,6 @@
      <TEXT>Business Partner &apos;4711&apos; of Contract &apos;10000343&apos; is currently blocked.</TEXT>
     </T100>
    </T100>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <T100T>
-    <T100T>
-     <SPRSL>D</SPRSL>
-     <ARBGB>ZPRC_DEMO_EVENT_EQUI</ARBGB>
-     <STEXT>Processing Center Demo: Event-Handling</STEXT>
-    </T100T>
-   </T100T>
-   <T100_TEXTS>
-    <item>
-     <SPRSL>D</SPRSL>
-     <MSGNR>001</MSGNR>
-     <TEXT>Kontrakt erfolgreich zgeordnet: &apos;10000343&apos; - &apos;00100&apos;</TEXT>
-    </item>
-    <item>
-     <SPRSL>D</SPRSL>
-     <MSGNR>002</MSGNR>
-     <TEXT>Kontrakt &apos;10000343&apos; ist fehlerhaft, siehe Details.</TEXT>
-    </item>
-    <item>
-     <SPRSL>D</SPRSL>
-     <MSGNR>003</MSGNR>
-     <TEXT>Kontrakt &apos;10000343&apos; hat Status &quot;Erledigt&quot; und kann nicht geändert werden.</TEXT>
-    </item>
-    <item>
-     <SPRSL>D</SPRSL>
-     <MSGNR>004</MSGNR>
-     <TEXT>Geschäftpartner &apos;4711&apos; in Kontrake &apos;10000343&apos; ist momentan gesperrt.</TEXT>
-    </item>
-   </T100_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

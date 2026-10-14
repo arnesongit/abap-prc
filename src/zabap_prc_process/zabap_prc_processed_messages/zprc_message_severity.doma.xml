@@ -42,41 +42,6 @@
    <DD01L_EXTRA>
     <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
    </DD01L_EXTRA>
-   <I18N_LANGS>
-    <LANGU>D</LANGU>
-   </I18N_LANGS>
-   <DD01_TEXTS>
-    <item>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DDTEXT>Nachrichtentyp</DDTEXT>
-    </item>
-   </DD01_TEXTS>
-   <DD07_TEXTS>
-    <item>
-     <VALPOS>0001</VALPOS>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DOMVALUE_L>S</DOMVALUE_L>
-     <DDTEXT>Erfolgreich</DDTEXT>
-    </item>
-    <item>
-     <VALPOS>0002</VALPOS>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DOMVALUE_L>I</DOMVALUE_L>
-     <DDTEXT>Information</DDTEXT>
-    </item>
-    <item>
-     <VALPOS>0003</VALPOS>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DOMVALUE_L>E</DOMVALUE_L>
-     <DDTEXT>Fehler</DDTEXT>
-    </item>
-    <item>
-     <VALPOS>0004</VALPOS>
-     <DDLANGUAGE>D</DDLANGUAGE>
-     <DOMVALUE_L>W</DOMVALUE_L>
-     <DDTEXT>Warnung</DDTEXT>
-    </item>
-   </DD07_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

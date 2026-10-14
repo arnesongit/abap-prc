@@ -1,0 +1,20 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_S, maxlen=10
+msgid "Exec Type"
+msgstr ""
+
+#: DTEL/ZPRC_RUN_EXECUTION_TYPE/REPTEXT, maxlen=55
+#: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_L, maxlen=40
+#: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_M, maxlen=20
+msgid "Execution Type"
+msgstr ""
+
+#: DTEL/ZPRC_RUN_EXECUTION_TYPE/DDTEXT, maxlen=60
+msgid "Execution Type of the Run"
+msgstr ""

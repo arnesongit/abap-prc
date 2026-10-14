@@ -1,0 +1,26 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MESS/ZPRC_DEMO_EVENT_EQUI004/TEXT, maxlen=73
+msgid "Business Partner '4711' of Contract '10000343' is currently blocked."
+msgstr "Geschäftpartner '4711' in Kontrake '10000343' ist momentan gesperrt."
+
+#: MSAG/ZPRC_DEMO_EVENT_EQUI/STEXT, maxlen=60
+msgid "Event Handling for equipments"
+msgstr "Processing Center Demo: Event-Handling"
+
+#: MESS/ZPRC_DEMO_EVENT_EQUI002/TEXT, maxlen=73
+msgid "Service Contract '10000343' has errors, see details."
+msgstr "Kontrakt '10000343' ist fehlerhaft, siehe Details."
+
+#: MESS/ZPRC_DEMO_EVENT_EQUI003/TEXT, maxlen=73
+msgid "Service Contract '10000343' has status \"Completed\" and cannot be changed."
+msgstr "Kontrakt '10000343' hat Status \"Erledigt\" und kann nicht geändert werden."
+
+#: MESS/ZPRC_DEMO_EVENT_EQUI001/TEXT, maxlen=73
+msgid "Successfully assigned to Service Contract '10000343' - '00100'."
+msgstr "Kontrakt erfolgreich zgeordnet: '10000343' - '00100'"

@@ -3,6 +3,10 @@
  <asx:values>
   <DATA>
    <MASTER_LANGUAGE>E</MASTER_LANGUAGE>
+   <I18N_LANGUAGES>
+    <LAISO>DE</LAISO>
+   </I18N_LANGUAGES>
+   <USE_LXE>X</USE_LXE>
    <STARTING_FOLDER>/src/</STARTING_FOLDER>
    <FOLDER_LOGIC>FULL</FOLDER_LOGIC>
    <IGNORE>
@@ -13,6 +17,13 @@
     <item>/src/zabap_prc_fiori_content/5af3c81b9d2e1fe1ac84d00f00746069.uiad.json</item>
     <item>/src/zabap_prc_fiori_content/5af3c81b9d2e1fe1ac84d4e665ea8069.uiad.json</item>
     <item>/src/zabap_prc_fiori_content/df38e4196dd52ce6d708df0e5e4994ht.sush.xml</item>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_adj_run/zui_prc_demo_srvctr_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_adj_run/zabap_prc_demo_adj_run_bupa/zui_prc_demo_bupa_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_adj_run/zabap_prc_demo_adj_run_equi/zui_prc_demo_equipment_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_adj_run/zabap_prc_demo_adj_run_mat/zui_prc_demo_material_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_process/zabap_prc_processed_messages/zui_prc_processed_messages_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_process/zabap_prc_processed_objects/zui_prc_processed_object_o4.g4ba.xml</item>
+    <item>/src/zabap_prc_run/zabap_prc_run_app/zui_prc_run_o4.g4ba.xml</item>
    </IGNORE>
   </DATA>
  </asx:values>

@@ -1,0 +1,15 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: DOMA/ZPRC_DEMO_ERROR_STATUS/DDTEXT A, maxlen=60
+#: VALU/ZPRC_DEMO_ERROR_STATUS/DDTEXT 00001, maxlen=60
+msgid "Contains Error"
+msgstr "Enthält Fehler"
+
+#: VALU/ZPRC_DEMO_ERROR_STATUS/DDTEXT 00002, maxlen=60
+msgid "No Error"
+msgstr "Keine Fehler"
