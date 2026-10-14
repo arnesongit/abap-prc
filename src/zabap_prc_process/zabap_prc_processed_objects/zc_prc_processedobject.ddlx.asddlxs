@@ -9,7 +9,7 @@
 
 annotate view ZC_PRC_ProcessedObject with
 
-{
+{ 
   @UI.facet: [
   { id: 'idCollection', type: #COLLECTION, label: 'Processed Object' },
                { id: 'idLatestInformation',

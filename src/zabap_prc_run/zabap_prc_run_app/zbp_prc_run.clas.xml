@@ -13,6 +13,12 @@
     <UNICODE>X</UNICODE>
     <CLSDEFINT>ZR_PRC_RUN</CLSDEFINT>
    </VSEOCLASS>
+   <DESCRIPTIONS_CLASS>
+    <SEOCLASSTX>
+     <LANGU>D</LANGU>
+     <DESCRIPT>Business-Logik zum Verarbeiten von Objekten in Läufen</DESCRIPT>
+    </SEOCLASSTX>
+   </DESCRIPTIONS_CLASS>
   </asx:values>
  </asx:abap>
 </abapGit>

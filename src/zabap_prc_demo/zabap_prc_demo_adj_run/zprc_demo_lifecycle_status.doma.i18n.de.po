@@ -1,0 +1,26 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: VALU/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT 00003, maxlen=60
+msgid "Completed"
+msgstr "Fertig"
+
+#: VALU/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT 00002, maxlen=60
+msgid "In Process"
+msgstr "In Bearbeitung"
+
+#: DOMA/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT A, maxlen=60
+msgid "Lifecycle status"
+msgstr "Lifecycle Status"
+
+#: VALU/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT 00001, maxlen=60
+msgid "Open"
+msgstr "Offen"
+
+#: VALU/ZPRC_DEMO_LIFECYCLE_STATUS/DDTEXT 00004, maxlen=60
+msgid "Released"
+msgstr "Freigegeben"

@@ -1,0 +1,14 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MSAG/ZPRC_PROCESS_MESSAGE/STEXT, maxlen=60
+msgid "Process Message"
+msgstr ""
+
+#: MESS/ZPRC_PROCESS_MESSAGE001/TEXT, maxlen=73
+msgid "Processing object &1 failed. Stopped working on queue &2."
+msgstr ""

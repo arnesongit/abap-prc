@@ -1,0 +1,18 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MSAG/ZPRC_TEST_BGPF/STEXT, maxlen=60
+msgid "PRC Test: bgPF aus adjust_numbers"
+msgstr ""
+
+#: MESS/ZPRC_TEST_BGPF 002/TEXT, maxlen=73
+msgid "Testinstanz &1 konnte nicht verarbeitet werden"
+msgstr ""
+
+#: MESS/ZPRC_TEST_BGPF 001/TEXT, maxlen=73
+msgid "Testinstanz &1 wurde verarbeitet (performed)"
+msgstr ""

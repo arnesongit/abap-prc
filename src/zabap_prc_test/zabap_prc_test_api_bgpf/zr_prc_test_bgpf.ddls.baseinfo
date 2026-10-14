@@ -17,3 +17,9 @@
 "ANNOREF_EVALUATION_ERROR":""
 }
 }
+  "BASEINFO": {
+    "FROM": [
+      "ZPRC_TEST_BGPF"
+    ]
+  }
+}

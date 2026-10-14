@@ -1,0 +1,33 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "Demo: Equipments",
+    "originalLanguage": "de",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_ALV5_DEFAULT"
+  },
+  "ui5AppDetails": {
+    "appId": "abap.demo.processingcenter.demoequi"
+  },
+  "navigation": {
+    "targetMappingId": "Z_PRC_DEMO_EQUIPMENT_TM",
+    "semanticObject": "ABAP_PRC_Demo_Equipment",
+    "action": "show",
+    "desktop": true,
+    "tablet": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_3D272C2C9272CC614F354FF1F3B45FB81DDCC199_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Demo: Equipment",
+        "subtitle": "Show and manage"
+      }
+    }
+  ]
+}

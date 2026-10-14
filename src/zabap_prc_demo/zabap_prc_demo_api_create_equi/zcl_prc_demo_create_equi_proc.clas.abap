@@ -61,6 +61,6 @@ CLASS zcl_prc_demo_create_equi_proc IMPLEMENTATION.
 
 
   METHOD zif_prc_process~get_url_for_processed_object.
-    RETURN |#ServiceContract-display?ServiceContract={ iv_processed_object }|.
+    RETURN |#ABAP_PRC_Demo_Equipment-show?ServiceContract={ iv_processed_object }|.
   ENDMETHOD.
 ENDCLASS.

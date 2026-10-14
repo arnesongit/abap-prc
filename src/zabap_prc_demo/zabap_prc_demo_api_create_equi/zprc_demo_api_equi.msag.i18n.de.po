@@ -1,0 +1,62 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MSAG/ZPRC_DEMO_API_EQUI/STEXT, maxlen=60
+msgid "Create Equipments"
+msgstr "Equipments anlegen"
+
+#: MESS/ZPRC_DEMO_API_EQUI 009/TEXT, maxlen=73
+msgid "Equipment &1:"
+msgstr "Equipment: &1"
+
+#: MESS/ZPRC_DEMO_API_EQUI 004/TEXT, maxlen=73
+msgid "Equipment created."
+msgstr "Equipment angelegt."
+
+#: MESS/ZPRC_DEMO_API_EQUI 011/TEXT, maxlen=73
+msgid "Equipment creation not successful."
+msgstr "Equipment erfolgreich angelegt."
+
+#: MESS/ZPRC_DEMO_API_EQUI 003/TEXT, maxlen=73
+msgid "Equipment exists already."
+msgstr "Equipment existiert bereits."
+
+#: MESS/ZPRC_DEMO_API_EQUI 008/TEXT, maxlen=73
+msgid "Equipment installed on Truck 0815."
+msgstr "Equipment am LKW 0815 installiert."
+
+#: MESS/ZPRC_DEMO_API_EQUI 013/TEXT, maxlen=73
+msgid "Equipment requires installation."
+msgstr "Equipment benötigt Installation."
+
+#: MESS/ZPRC_DEMO_API_EQUI 012/TEXT, maxlen=73
+msgid "Equipment requires no installation."
+msgstr "Equipment benötigt keine Installation."
+
+#: MESS/ZPRC_DEMO_API_EQUI 005/TEXT, maxlen=73
+msgid "Error during assignment of serial number 4711 to Sales Order SO000 - 01."
+msgstr "Fehler beim Verknüpfen des Equipment mit SN 4711 zu Auftrag SO000 - 01"
+
+#: MESS/ZPRC_DEMO_API_EQUI 006/TEXT, maxlen=73
+msgid "Linked equipment to SalesOrder SO002-04."
+msgstr "Equipment mit Auftrag SO002-04 verknüpft."
+
+#: MESS/ZPRC_DEMO_API_EQUI 001/TEXT, maxlen=73
+msgid "No serial number provided."
+msgstr "Keine Seriennummern angegeben."
+
+#: MESS/ZPRC_DEMO_API_EQUI 002/TEXT, maxlen=73
+msgid "Successfully validated."
+msgstr "Prüfung erfolgreich."
+
+#: MESS/ZPRC_DEMO_API_EQUI 007/TEXT, maxlen=73
+msgid "Superordinary equipment 0815 has errors."
+msgstr "Equipment 0815 isz fehlerhaft."
+
+#: MESS/ZPRC_DEMO_API_EQUI 010/TEXT, maxlen=73
+msgid "Validation not successful."
+msgstr "Prüfung nicht erfolgreich."

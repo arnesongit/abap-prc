@@ -1,0 +1,35 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "Processed Messages",
+    "originalLanguage": "de",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_ALV5_DEFAULT"
+  },
+  "ui5AppDetails": {
+    "appId": "abap.processing_center.processed_message"
+  },
+  "navigation": {
+    "targetMappingId": "Z_PRC_PROCESSEDMESSAGE_TM",
+    "semanticObject": "ABAP_PRC_ProcessedMessage",
+    "action": "show",
+    "desktop": true,
+    "tablet": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_3690B59B032498BEBA907223A022AB0B0D2CBF5F_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Processing Center",
+        "subtitle": "Nachrichten",
+        "information": "von Prozessen",
+        "icon": "sap-icon://message-popup"
+      }
+    }
+  ]
+}

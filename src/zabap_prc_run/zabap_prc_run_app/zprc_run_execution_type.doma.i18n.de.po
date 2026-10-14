@@ -1,0 +1,22 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: DOMA/ZPRC_RUN_EXECUTION_TYPE/DDTEXT A, maxlen=60
+msgid "Execution Type of the run (Regular, Test Mode,...)"
+msgstr ""
+
+#: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00003, maxlen=60
+msgid "Preview Mode"
+msgstr ""
+
+#: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00001, maxlen=60
+msgid "Regular Execution"
+msgstr ""
+
+#: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00002, maxlen=60
+msgid "Test Mode"
+msgstr ""
