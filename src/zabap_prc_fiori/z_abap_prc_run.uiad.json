@@ -1,0 +1,35 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "Processing Center",
+    "originalLanguage": "de",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_ALV5_DEFAULT"
+  },
+  "ui5AppDetails": {
+    "appId": "abap.processing_center.run"
+  },
+  "navigation": {
+    "targetMappingId": "Z_ABAP_PRC_RUN_TM",
+    "semanticObject": "ABAP_PRC_Run",
+    "action": "show",
+    "desktop": true,
+    "tablet": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_CA45631193C925F40B0BB096F6C48D7A4D44E8B4_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Processing Center",
+        "subtitle": "Verarbeitungsläufe",
+        "information": "Application-Jobs",
+        "icon": "sap-icon://offsite-work"
+      }
+    }
+  ]
+}

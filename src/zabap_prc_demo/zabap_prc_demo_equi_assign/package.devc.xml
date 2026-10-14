@@ -3,9 +3,8 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>Equipment Assignment</CTEXT>
+    <CTEXT>ZABAP_PRC_DEMO_EQUI_ASSIGN</CTEXT>
     <PACKKIND>5</PACKKIND>
-    <SRV_CHECK>X</SRV_CHECK>
    </DEVC>
   </asx:values>
  </asx:abap>

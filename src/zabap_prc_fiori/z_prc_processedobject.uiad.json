@@ -1,0 +1,35 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "Processed Objects",
+    "originalLanguage": "de",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_ALV5_DEFAULT"
+  },
+  "ui5AppDetails": {
+    "appId": "abap.processing_center.processed_object"
+  },
+  "navigation": {
+    "targetMappingId": "Z_PRC_PROCESSEDOBJECT_TM",
+    "semanticObject": "ABAP_PRC_ProcessedObject",
+    "action": "show",
+    "desktop": true,
+    "tablet": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_BD521CDAC20A5D386234416E06BB49FD3AD5F9C7_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Processing Center",
+        "subtitle": "Verarbeitungsobjekte",
+        "information": "Verarbeitungsschritte",
+        "icon": "sap-icon://documents"
+      }
+    }
+  ]
+}

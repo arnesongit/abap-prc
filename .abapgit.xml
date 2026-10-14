@@ -5,6 +5,15 @@
    <MASTER_LANGUAGE>E</MASTER_LANGUAGE>
    <STARTING_FOLDER>/src/</STARTING_FOLDER>
    <FOLDER_LOGIC>FULL</FOLDER_LOGIC>
+   <IGNORE>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_fiori_content/5af3c81b9d2e1fe1ac9cff4a896e0069.uiad.json</item>
+    <item>/src/zabap_prc_demo/zabap_prc_demo_fiori_content/5af3c81b9d2e1fe1accb2291d75b8069.uiad.json</item>
+    <item>/src/zabap_prc_fiori_content/1fba1fce38918ffb7a17cc4fb1fc15ht.sush.xml</item>
+    <item>/src/zabap_prc_fiori_content/5af3c81b9d2e1fe1ac84c345048f4069.uiad.json</item>
+    <item>/src/zabap_prc_fiori_content/5af3c81b9d2e1fe1ac84d00f00746069.uiad.json</item>
+    <item>/src/zabap_prc_fiori_content/5af3c81b9d2e1fe1ac84d4e665ea8069.uiad.json</item>
+    <item>/src/zabap_prc_fiori_content/df38e4196dd52ce6d708df0e5e4994ht.sush.xml</item>
+   </IGNORE>
   </DATA>
  </asx:values>
 </asx:abap>

@@ -4,6 +4,7 @@
   <asx:values>
    <DEVC>
     <CTEXT>ABAP Processing Center</CTEXT>
+    <PACKKIND>5</PACKKIND>
     <SRV_CHECK>X</SRV_CHECK>
    </DEVC>
   </asx:values>

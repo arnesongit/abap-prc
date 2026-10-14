@@ -13,6 +13,12 @@
     <UNICODE>X</UNICODE>
     <CLSDEFINT>ZR_PRC_MESSAGE</CLSDEFINT>
    </VSEOCLASS>
+   <DESCRIPTIONS_CLASS>
+    <SEOCLASSTX>
+     <LANGU>D</LANGU>
+     <DESCRIPT>Behavior Implementation für ZR_PRC_MESSAGE</DESCRIPT>
+    </SEOCLASSTX>
+   </DESCRIPTIONS_CLASS>
   </asx:values>
  </asx:abap>
 </abapGit>

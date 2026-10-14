@@ -30,13 +30,16 @@ CLASS zcl_prc_demo_adj_run_proc IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD zif_prc_process~get_url_for_processed_object.
-    cl_system_uuid=>convert_uuid_x16_static( EXPORTING uuid     = iv_processed_object_uuid
+    select single uuid from zprc_demo_srvctr
+      where service_contract_id = @iv_processed_object
+      into @data(l_uuid).
+    cl_system_uuid=>convert_uuid_x16_static( EXPORTING uuid     = l_uuid
                                              IMPORTING
 *                                                       uuid_c22 =
 *                                                       uuid_c32 =
 *                                                       uuid_c26 =
                                                        uuid_c36 = DATA(ls) ).
 *  CATCH cx_uuid_error.'
-    RETURN |#ServiceContract-display?ServiceContract({ ls })|.
+    RETURN |#ABAP_PRC_Demo_ServiceContract-show&/ServiceContract({ to_lower( ls ) })?layout=MidColumnFullScreen|.
   ENDMETHOD.
 ENDCLASS.

@@ -13,6 +13,12 @@
     <UNICODE>5</UNICODE>
     <CLSDEFINT>ZR_PRC_DEMO_EQUIPMENT</CLSDEFINT>
    </VSEOCLASS>
+   <DESCRIPTIONS_CLASS>
+    <SEOCLASSTX>
+     <LANGU>D</LANGU>
+     <DESCRIPT>Equipment Create Event-Handler</DESCRIPT>
+    </SEOCLASSTX>
+   </DESCRIPTIONS_CLASS>
   </asx:values>
  </asx:abap>
 </abapGit>
