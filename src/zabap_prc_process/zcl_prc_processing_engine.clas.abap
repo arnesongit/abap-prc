@@ -83,9 +83,10 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
                                   i_ignore_retry_scheduling = ignore_retry_scheduling
                         IMPORTING e_states                  = DATA(states) ).
 
-        DATA(lo_bali_log) = cl_bali_log=>create_with_header( cl_bali_header_setter=>create( object      = 'ZBALI_PRC'
-                                                                                            subobject   = 'PRC_RETRY'
-                                                                                            external_id = 'ABAP PRC Retry' ) ).
+        DATA(lo_bali_log) = cl_bali_log=>create_with_header(
+                                cl_bali_header_setter=>create( object      = 'ZBALI_PRC'
+                                                               subobject   = 'PRC_RETRY'
+                                                               external_id = 'ABAP PRC Retry' ) ).
         LOOP AT states INTO DATA(ls_group)
              GROUP BY ( appName = ls_group-processName
                         queueID = ls_group-queueID )
@@ -115,13 +116,18 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
                                                       i_start_state      = start_state
                                                       i_processed_object = <fs_state>-ExternalProcessedObjectID ).
                     lo_transition_handler->initialize(
+                        i_process_name              = <fs_state>-ProcessName
                         i_message_handler           = lo_message_handler
                         i_processed_object_ext_id   = <fs_state>-ExternalProcessedObjectID
                         i_processed_object_ext_uuid = <fs_state>-ExternalProcessedObjectUUID ).
 
+                    " The transition works on a copy of the payload: a change is
+                    " taken over only if the transition succeeds
+                    DATA(lv_payload_json) = <fs_state>-payloadjson.
                     DATA(proposed_end_state) = lo_transition_handler->perform_transition(
                                                  EXPORTING i_start_state  = start_state
-                                                 CHANGING  c_payload_json = <fs_state>-payloadjson ).
+                                                 CHANGING  c_payload_json = lv_payload_json ).
+                    <fs_state>-payloadjson = lv_payload_json.
 
                     <fs_state>-state = _get_end_state( i_proposed_end_state = proposed_end_state
                                                        i_state              = <fs_state> ).
@@ -285,7 +291,9 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
            REPORTED DATA(lt_reported)
            FAILED DATA(lt_failed)
            MAPPED DATA(lt_mapped).
-    ASSERT lt_failed IS INITIAL AND lt_reported IS INITIAL.
+    IF lt_failed IS NOT INITIAL OR lt_reported IS NOT INITIAL.
+      ASSERT lt_failed IS INITIAL AND lt_reported IS INITIAL.
+    ENDIF.
 
     DATA(lt_all_messages) = i_message_handler->get_messages( ).
     MODIFY ENTITIES OF ZR_PRC_ProcessedObject PRIVILEGED
@@ -305,17 +313,19 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
            REPORTED DATA(lt_reported_message)
            FAILED DATA(lt_failed_message)
            MAPPED DATA(lt_mapped_message).
-    ASSERT lt_failed IS INITIAL AND lt_reported IS INITIAL.
+    ASSERT lt_failed_message IS INITIAL AND lt_reported_message IS INITIAL.
 
+    " PayloadJson: changed by a successful transition, unchanged after a failure
     MODIFY ENTITIES OF ZR_PRC_ProcessedObject PRIVILEGED
            ENTITY ProcessedObject
-           UPDATE FIELDS ( RetryCount RetryDateTime State ExternalProcessedObjectID LatestStepUUID )
+           UPDATE FIELDS ( RetryCount RetryDateTime State ExternalProcessedObjectID LatestStepUUID PayloadJson )
            WITH VALUE #( ( %key-uuid                 = i_state-uuid
                            LatestStepUUID            = lt_mapped-processedstep[ 1 ]-StepUUID
                            RetryCount                = i_state-RetryCount
                            RetryDateTime             = i_state-RetryDateTime
                            State                     = i_state-State
                            ExternalProcessedObjectID = i_state-ExternalProcessedObjectID
+                           PayloadJson               = i_state-PayloadJson
                             ) )
            REPORTED lt_reported
            FAILED lt_failed.
@@ -324,6 +334,7 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
 
 
   METHOD _update_retry_data.
+    " Retry schedule after an error: +5 min, +55 min, +23 h, +6 d, then no further retry
     IF i_message_handler->has_errors( ) = abap_true.
       GET TIME STAMP FIELD DATA(lv_timestamp).
       CASE c_state-retryCount.
@@ -342,7 +353,7 @@ CLASS zcl_prc_processing_engine IMPLEMENTATION.
         WHEN 3.
           c_state-retryCount    = 4.
           c_state-retryDatetime = cl_abap_tstmp=>add( tstmp = lv_timestamp
-                                                      secs  = 6 * 60 * 60 ).
+                                                      secs  = 6 * 24 * 60 * 60 ).
         WHEN 4.
           c_state-retryCount = zif_prc_process=>co_max_retry.
           CLEAR c_state-retryDatetime.

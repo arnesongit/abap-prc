@@ -202,8 +202,8 @@ CLASS zcl_prc_run_job IMPLEMENTATION.
     ENDIF.
     IF mv_run_in_background = abap_true.
       COMMIT ENTITIES RESPONSES FAILED DATA(ls_failed).
-      ROLLBACK ENTITIES.
       ASSERT sy-subrc = 0 AND ls_failed IS INITIAL.
+      ROLLBACK ENTITIES.
     ENDIF.
   ENDMETHOD.
 
@@ -237,6 +237,7 @@ CLASS zcl_prc_run_job IMPLEMENTATION.
            MAPPED DATA(create_mapped).
 
     COMMIT ENTITIES RESPONSES FAILED DATA(failed) REPORTED DATA(reported).
+    ASSERT sy-subrc = 0 AND failed IS INITIAL.
     ROLLBACK ENTITIES.
   ENDMETHOD.
 ENDCLASS.

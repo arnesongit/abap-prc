@@ -16,6 +16,10 @@
 "! <li>CLOSE_OK - directly after MESSAGE s...</li>
 "! </ol>
 "!
+"! Severities: W, I and S are kept. Every other severity (E, A, X) is an error:
+"! it is treated identically and stored as E. I_FAIL_ON_ERROR_MESSAGE applies to
+"! all errors in the same way.
+"!
 "! Any failure raises ZCX_PRC_UNIT_OF_WORK_FAILED immediately and seals the
 "! handler, so the caller never has to query the state in between asking for has_errors() - which is still provided.
 INTERFACE zif_prc_message_handler PUBLIC.
@@ -44,15 +48,14 @@ INTERFACE zif_prc_message_handler PUBLIC.
   "! is <em>not</em> translatable and cannot be found by the where-used list of
   "! any message. Roughly 200 characters survive; longer texts are truncated.
   "!
-  "! Only A, E, W, S and I are meaningful severities here.
+  "! W, I and S are kept; every other severity is stored as error E.
   "!
   "! @parameter i_message_text              | Text to be recorded.
   "! @parameter i_message_severity          | Message type of the text.
-  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets severity E fail the
+  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets an error (E, A, X) fail the
   "!                                        handler. Default TRUE, because passing
   "!                                        an error severity is a deliberate
-  "!                                        statement by the caller. Severity A
-  "!                                        always fails.
+  "!                                        statement by the caller.
   "! @parameter r_message_handler           | Self reference for chaining.
   "! @raising   zcx_prc_unit_of_work_failed | The text failed the unit of work.
   METHODS add_message_from_text IMPORTING i_message_text           TYPE string
@@ -86,10 +89,10 @@ INTERFACE zif_prc_message_handler PUBLIC.
   "! Must be called directly after the MESSAGE statement, since any intervening
   "! method call may overwrite SY.
   "!
-  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets severity E fail the handler.
-  "!                                      Default TRUE, because an explicit
+  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets an error (E, A, X) fail the
+  "!                                      handler. Default TRUE, because an explicit
   "!                                      MESSAGE e... by the caller is a deliberate
-  "!                                      statement. Severity A always fails.
+  "!                                      statement.
   "! @parameter r_message_handler           | Self reference for chaining.
   "! @raising   zcx_prc_unit_of_work_failed | The message failed the unit of work.
   METHODS add_message_from_sy IMPORTING i_fail_on_error_message  TYPE abap_bool DEFAULT abap_true
@@ -107,12 +110,12 @@ INTERFACE zif_prc_message_handler PUBLIC.
   "!
   "! @parameter i_failed                    | FAILED response. Evaluated if supplied.
   "! @parameter i_reported                  | REPORTED response. Evaluated if supplied.
-  "! @parameter i_fail_on_error_message     | ABAP_TRUE also lets severity E in REPORTED
-  "!                                      fail the handler. Default FALSE, because RAP
-  "!                                      BOs legitimately report E without FAILED
-  "!                                      (state messages, messages on other
-  "!                                      instances). Set to TRUE only for a BO known
-  "!                                      to violate the contract, and document why.
+  "! @parameter i_fail_on_error_message     | ABAP_TRUE also lets errors (E, A, X) in
+  "!                                      REPORTED fail the handler. Default FALSE,
+  "!                                      because RAP BOs legitimately report E
+  "!                                      without FAILED (state messages, messages on
+  "!                                      other instances). Set to TRUE only for a BO
+  "!                                      known to violate the contract, and document why.
   "! @parameter r_message_handler           | Self reference for chaining.
   "! @raising   zcx_prc_unit_of_work_failed | The operation failed.
   METHODS add_EML_modify_result IMPORTING i_failed                 TYPE any       OPTIONAL
@@ -124,13 +127,12 @@ INTERFACE zif_prc_message_handler PUBLIC.
   "! Adds the return table of a BAPI call.
   "!
   "! A BAPI has no FAILED equivalent, so severity is the only failure signal here.
-  "! Severity A always fails the handler regardless of the parameter.
   "!
   "! @parameter i_bapiret                   | Return table of the BAPI.
-  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets severity E fail the handler.
-  "!                                      Default TRUE.
+  "! @parameter i_fail_on_error_message     | ABAP_TRUE lets an error (E, A, X) fail the
+  "!                                      handler. Default TRUE.
   "! @parameter r_message_handler           | Self reference for chaining.
-  "! @raising   zcx_prc_unit_of_work_failed | The BAPI reported E or A.
+  "! @raising   zcx_prc_unit_of_work_failed | The BAPI reported an error.
   METHODS add_bapi_result IMPORTING i_bapiret                TYPE zif_prc_message_handler=>tt_bapiret2
                                     i_fail_on_error_message  TYPE abap_bool DEFAULT abap_true
                           RETURNING VALUE(r_message_handler) TYPE REF TO zif_prc_message_handler

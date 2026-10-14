@@ -3,7 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>ZABAP_PRC_EVENTS_SE_2025</CTEXT>
+    <CTEXT>Event-based side effects as extension available with 2025</CTEXT>
+    <LANGUAGE>E</LANGUAGE>
+    <MASTERLANG>E</MASTERLANG>
     <PACKKIND>5</PACKKIND>
    </DEVC>
   </asx:values>

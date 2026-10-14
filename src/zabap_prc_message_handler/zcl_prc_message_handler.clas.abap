@@ -1,6 +1,9 @@
 "! <p class="shorttext synchronized">Standard implementation of ZIF_PRC_MESSAGE_HANDLER</p>
 "!
 "! One instance per unit of work. Not reusable after being sealed.
+"!
+"! Severities: W, I and S are kept. Everything else (E, A, X, ...) is treated
+"! and stored as error E, see NORMALIZE_SEVERITY.
 CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
 
   PUBLIC SECTION.
@@ -9,7 +12,6 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
     CLASS-METHODS create_message_handler IMPORTING i_bali_log               TYPE REF TO if_bali_log OPTIONAL
                                          RETURNING VALUE(r_message_handler) TYPE REF TO zif_prc_message_handler.
 
-  PROTECTED SECTION.
   PRIVATE SECTION.
     METHODS constructor IMPORTING i_bali_log TYPE REF TO if_bali_log.
 
@@ -26,17 +28,24 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
     METHODS append_messages    IMPORTING i_messages TYPE zcl_prc_message_mapper=>tt_messages.
     METHODS set_message_header IMPORTING i_header   TYPE symsg.
 
+    "! Internal severity of a message: W, I and S are kept, everything else
+    "! (E, A, X, ...) becomes E. Used for every message entering the handler,
+    "! so all errors are stored and evaluated in the same way.
+    "!
+    "! @parameter i_msgty | Severity as delivered by the caller.
+    "! @parameter r_msgty | W, I, S or E.
+    METHODS normalize_severity IMPORTING i_msgty        TYPE symsgty
+                               RETURNING VALUE(r_msgty) TYPE symsgty.
+
     DATA m_bali_log           TYPE REF TO if_bali_log.
     DATA m_log_message_prefix TYPE symsg.
 ENDCLASS.
 
 
-
 CLASS zcl_prc_message_handler IMPLEMENTATION.
-
-
   METHOD append_message.
     APPEND CORRESPONDING #( i_message ) TO mt_messages ASSIGNING FIELD-SYMBOL(<fs>).
+    <fs>-msgty = normalize_severity( <fs>-msgty ).
 
     MESSAGE ID <fs>-msgid
             TYPE <fs>-msgty
@@ -63,32 +72,34 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
   METHOD append_messages.
     LOOP AT i_messages INTO DATA(ls_message).
       append_message( ls_message ).
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD constructor.
     m_bali_log = i_bali_log.
   ENDMETHOD.
 
-
   METHOD create_message_handler.
     r_message_handler = NEW zcl_prc_message_handler( i_bali_log ).
   ENDMETHOD.
-
 
   METHOD fail.
     mv_failed = abap_true.
     RAISE EXCEPTION NEW zcx_prc_unit_of_work_failed( ).
   ENDMETHOD.
 
+  METHOD normalize_severity.
+    r_msgty = COND #( WHEN i_msgty = 'W' OR i_msgty = 'I' OR i_msgty = 'S'
+                      THEN i_msgty
+                      ELSE 'E' ).
+  ENDMETHOD.
 
   METHOD set_message_header.
     ms_header = CORRESPONDING #( i_header ).
+    ms_header-msgty = normalize_severity( ms_header-msgty ).
 
     MESSAGE ID ms_header-msgid
             TYPE ms_header-msgty
@@ -112,24 +123,27 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     APPEND ms_header TO mt_messages.
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~add_bapi_result.
     r_message_handler = me.
 
     DATA(lt_msg) = zcl_prc_message_mapper=>from_bapiret( i_bapiret ).
+    LOOP AT lt_msg ASSIGNING FIELD-SYMBOL(<ls_msg>).
+      <ls_msg>-msgty = normalize_severity( <ls_msg>-msgty ).
+    ENDLOOP.
     append_messages( lt_msg ).
-    IF line_exists( lt_msg[ msgty = 'A' ] ) OR ( i_fail_on_error_message = abap_true AND line_exists(
-                                                                                             lt_msg[ msgty = 'E' ] ) ).
+    IF i_fail_on_error_message = abap_true AND line_exists( lt_msg[ msgty = 'E' ] ).
       fail( ).
     ENDIF.
   ENDMETHOD.
-
 
   METHOD zif_prc_message_handler~add_EML_modify_result.
     r_message_handler = me.
 
     IF i_reported IS SUPPLIED.
       DATA(lt_msg) = zcl_prc_message_mapper=>from_reported( i_reported ).
+      LOOP AT lt_msg ASSIGNING FIELD-SYMBOL(<ls_msg>).
+        <ls_msg>-msgty = normalize_severity( <ls_msg>-msgty ).
+      ENDLOOP.
       append_messages( lt_msg ).
       IF i_fail_on_error_message = abap_true AND line_exists( lt_msg[ msgty = 'E' ] ).
         fail( ).
@@ -141,33 +155,30 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~add_message_from_sy.
     r_message_handler = me.
 
     DATA(ls_msg) = CORRESPONDING symsg( sy ).
+    ls_msg-msgty = normalize_severity( ls_msg-msgty ).
     append_message( ls_msg ).
-    IF ls_msg-msgty = 'A' OR ( i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E' ).
+    IF i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E'.
       fail( ).
     ENDIF.
   ENDMETHOD.
-
 
   METHOD zif_prc_message_handler~add_message_from_text.
     r_message_handler = me.
 
     DATA(ls_msg) = zcl_prc_message_mapper=>from_text( text  = i_message_text
                                                       msgty = i_message_severity ).
+    ls_msg-msgty = normalize_severity( ls_msg-msgty ).
     append_message( ls_msg ).
-
-    IF ls_msg-msgty = 'A' OR ( i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E' ).
+    IF i_fail_on_error_message = abap_true AND ls_msg-msgty = 'E'.
       fail( ).
     ENDIF.
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~close_failed.
-
     set_message_header( CORRESPONDING #( sy ) ).
     fail( ).
   ENDMETHOD.
@@ -182,16 +193,13 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
                                                                  assign_to_current_appl_job = abap_true ).
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~get_header.
     r_message = ms_header.
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~get_messages.
     r_messages = mt_messages.
   ENDMETHOD.
-
 
   METHOD zif_prc_message_handler~has_errors.
     r_has_errors = mv_failed.
@@ -202,16 +210,13 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     set_message_header( i_header_message ).
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~set_log_message_prefix.
     m_log_message_prefix = i_log_message_prefix.
   ENDMETHOD.
 
-
   METHOD zif_prc_message_handler~set_success_header.
     set_message_header( i_header_message ).
   ENDMETHOD.
-
 
   METHOD zif_prc_message_handler~simulate_save.
     r_message_handler = me.
@@ -228,7 +233,7 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     DATA(lv_subrc_bad) = xsdbool( sy-subrc <> 0 ).
 
     zif_prc_message_handler~add_EML_modify_result( i_failed   = lt_failed
-                                                i_reported = lt_reported ).
+                                                   i_reported = lt_reported ).
     IF lv_subrc_bad = abap_true.
       fail( ).
     ENDIF.
