@@ -5,6 +5,7 @@ define service ZUI_PRC_RUN_O4 {
   expose ZC_PRC_ProcessedObject      as ProcessedObject;
   expose ZC_PRC_ProcessedStep        as ProcessedStep;
   expose ZC_PRC_ProcessedMessage     as ProcessedMessage;
+  expose ZC_PRC_AllProcessedMessages as AllProcessedMessages;
   expose ZC_PRC_RunExecutionStatusVH;
   expose ZC_PRC_RunExecutionTypeVH;
 }
