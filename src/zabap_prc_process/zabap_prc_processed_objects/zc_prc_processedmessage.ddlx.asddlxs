@@ -12,6 +12,7 @@ annotate entity ZC_PRC_ProcessedMessage with
   @UI.hidden
   ProcessedObjectUUID;
 
+  @EndUserText.label: 'Message Text'
   @UI.lineItem: [ { position: 10 } ]
   MessageText;
 
