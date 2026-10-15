@@ -11,4 +11,4 @@ msgstr "Parameter für neue Prozess-Instanz"
 
 #: DDLS/ZA_PRC_CREATEPROCESSEDOBJECT/00001 DDDDLSRC02BT, maxlen=60
 msgid "Parameter to create a Processed Object"
-msgstr "Parameter für das Verarbeitungsobjekt"
+msgstr "Parameter zur Verarbeitung des Objekts"

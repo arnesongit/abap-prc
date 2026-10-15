@@ -5,6 +5,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: TLGS/DDLXZC_PRC_ALLPROCESSEDMESSAGES 06/0000010005TEXT, maxlen=255
+msgid "End State"
+msgstr "Endzustand"
+
+#: TLGS/DDLXZC_PRC_ALLPROCESSEDMESSAGES 06/0000020005TEXT, maxlen=255
+msgid "Message Text"
+msgstr "Nachrichtentext"
+
 #: TLGS/DDLXZC_PRC_ALLPROCESSEDMESSAGES 02/0000010004DESCRIPTION, maxlen=60
 msgid "Processed Step"
 msgstr "Verarbeitungsschritt"
+
+#: TLGS/DDLXZC_PRC_ALLPROCESSEDMESSAGES 06/0000030005TEXT, maxlen=255
+msgid "Start State"
+msgstr "Startzustand"

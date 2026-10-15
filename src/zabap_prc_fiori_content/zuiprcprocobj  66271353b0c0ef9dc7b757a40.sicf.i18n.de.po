@@ -7,4 +7,4 @@ msgstr ""
 
 #: TLGS/SICFZUIPRCPROCOBJ 907RM5PM0WS1BRG2HAYGJYC1N03/0000010004ICF_DOCU, maxlen=210
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"

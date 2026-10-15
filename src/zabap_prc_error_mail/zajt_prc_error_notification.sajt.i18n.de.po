@@ -7,4 +7,4 @@ msgstr ""
 
 #: TLGS/SAJTZAJT_PRC_ERROR_NOTIFICATION 02/0000010004TEXT, maxlen=120
 msgid "ABAP Processing Center: Error Notification (via Mail)"
-msgstr "ABAP Processing Center: Fehlermeldung (vie E-Mail)"
+msgstr "ABAP Processing Center: Fehlermeldung (via E-Mail)"

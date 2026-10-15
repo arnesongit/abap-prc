@@ -35,7 +35,7 @@ msgstr "Nachrichtentyp"
 
 #: TLGS/DDLXZR_PRC_MESSAGE 06/0000050005TEXT, maxlen=255
 msgid "Message Severity Code"
-msgstr "Nachrichtentyp-Code"
+msgstr "Nachrichtencode"
 
 #: TLGS/DDLXZR_PRC_MESSAGE 06/0000060005TEXT, maxlen=255
 msgid "Message Text"
@@ -63,4 +63,4 @@ msgstr "Prozess-Name"
 
 #: TLGS/DDLXZR_PRC_MESSAGE 06/0000090005TEXT, maxlen=255
 msgid "Resume Processing"
-msgstr "Verarbeitung fortsetzen"
+msgstr "Fortsetzen"

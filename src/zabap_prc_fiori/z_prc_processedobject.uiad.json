@@ -26,8 +26,8 @@
       "isDefault": true,
       "standard": {
         "title": "Processing Center",
-        "subtitle": "Verarbeitungsobjekte",
-        "information": "Verarbeitungsschritte",
+        "subtitle": "Verarbeitete Objekte",
+        "information": "Recvery",
         "icon": "sap-icon://documents"
       }
     }

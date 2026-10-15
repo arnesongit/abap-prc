@@ -7,4 +7,4 @@ msgstr ""
 
 #: BSP/ZUIPRCPROCOBJ/O2APPLT 00001, maxlen=60
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"

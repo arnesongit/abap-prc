@@ -7,4 +7,4 @@ msgstr ""
 
 #: TABT/ZPRC_PROC_MSG/1_DD02T A, maxlen=60
 msgid "Processed Messages"
-msgstr "Erzeugte Meldungen"
+msgstr "Erzeugte Nachrichten"

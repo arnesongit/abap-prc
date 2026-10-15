@@ -7,4 +7,4 @@ msgstr ""
 
 #: DTEL/ZPRC_MESSAGE_SEVERITY_CODE/DDTEXT, maxlen=60
 msgid "Message Severity"
-msgstr "Nachrichtentyp"
+msgstr "Nachrichtencode"

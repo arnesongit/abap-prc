@@ -7,4 +7,4 @@ msgstr ""
 
 #: DOMA/ZPRC_RUN_APP_NAME/DDTEXT A, maxlen=60
 msgid "Name of applications applying the RUN pattern"
-msgstr ""
+msgstr "Applikation, die Startparameter liefert"

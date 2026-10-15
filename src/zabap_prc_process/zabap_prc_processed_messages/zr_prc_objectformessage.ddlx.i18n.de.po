@@ -19,4 +19,4 @@ msgstr "MDE für ZC_PRC_OBJECTFORMESSAGE"
 
 #: TLGS/DDLXZR_PRC_OBJECTFORMESSAGE 06/0000030005TEXT, maxlen=255
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"

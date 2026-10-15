@@ -59,18 +59,18 @@ msgstr "Nächster Versuch"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000290005TEXT, maxlen=255
 msgid "Processed Messages"
-msgstr "Erzeugte Meldungen"
+msgstr "Erzeugte Nachrichten"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 02/0000010004DESCRIPTION, maxlen=60
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000010005TEXT, maxlen=255
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000060005TEXT, maxlen=255
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000220005TEXT, maxlen=255
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000260005TEXT, maxlen=255
 msgid "Processed Object IDs"
-msgstr "IDs der verarbeiteten Objekte"
+msgstr "IDs des verarbeiteten Objekts"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000070005TEXT, maxlen=255
 msgid "Processed Object UUID"
@@ -78,12 +78,12 @@ msgstr "UUID des Verarbeitungsobjekts"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000020005TEXT, maxlen=255
 msgid "Processed Objects"
-msgstr "Verarbeitungsobjekte"
+msgstr "Verarbeitete Objekte"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000180005TEXT, maxlen=255
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000280005TEXT, maxlen=255
 msgid "Processed Steps"
-msgstr "Verarbeitete Schritte"
+msgstr "Verarbeitet"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000130005TEXT, maxlen=255
 msgid "Queue ID"
@@ -100,7 +100,7 @@ msgstr "Warteschlange und Verzögerung"
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000300005TEXT, maxlen=255
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000310005TEXT, maxlen=255
 msgid "Resume Processing"
-msgstr "Verarbeitung fortsetzen"
+msgstr "Fortsetzen"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000150005TEXT, maxlen=255
 msgid "Retry Count"
@@ -108,7 +108,7 @@ msgstr "Anz. Wiederholversuche"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000170005TEXT, maxlen=255
 msgid "State"
-msgstr "Status"
+msgstr "Zustand"
 
 #: TLGS/DDLXZC_PRC_PROCESSEDOBJECT 06/0000210005TEXT, maxlen=255
 msgid "Step Total"

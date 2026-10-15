@@ -9,11 +9,11 @@ msgstr ""
 #: DDLS/ZC_PRC_PROCESSEDOBJECT/00002 DDHEADANNOT, maxlen=255
 #: DDLT/ZC_PRC_PROCESSEDOBJECT/00001 DDDDLSRCT, maxlen=60
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"
 
 #: DDLS/ZC_PRC_PROCESSEDOBJECT/00003 DDHEADANNOT, maxlen=255
 msgid "Processed Objects"
-msgstr "Verarbeitungsobjekte"
+msgstr "Verarbeitete Objekte"
 
 #: DDLS/ZC_PRC_PROCESSEDOBJECT/00004 DDHEADANNOT, maxlen=255
 msgid "SelectionVariant"

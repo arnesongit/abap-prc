@@ -7,14 +7,14 @@ msgstr ""
 
 #: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_S, maxlen=10
 msgid "Exec Type"
-msgstr ""
+msgstr "Typ"
 
 #: DTEL/ZPRC_RUN_EXECUTION_TYPE/REPTEXT, maxlen=55
 #: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_L, maxlen=40
 #: DTEL/ZPRC_RUN_EXECUTION_TYPE/SCRTEXT_M, maxlen=20
 msgid "Execution Type"
-msgstr ""
+msgstr "Ausführungs-Typ"
 
 #: DTEL/ZPRC_RUN_EXECUTION_TYPE/DDTEXT, maxlen=60
 msgid "Execution Type of the Run"
-msgstr ""
+msgstr "Ausführungs-Typ des Laufs"

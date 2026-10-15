@@ -7,8 +7,8 @@ msgstr ""
 
 #: MSAG/ZPRC_PROCESS_MESSAGE/STEXT, maxlen=60
 msgid "Process Message"
-msgstr ""
+msgstr "Prozess-Nachricht"
 
 #: MESS/ZPRC_PROCESS_MESSAGE001/TEXT, maxlen=73
 msgid "Processing object &1 failed. Stopped working on queue &2."
-msgstr ""
+msgstr "Fehler beim Objekt &1. Verarbeitung der Queue &2 gestoppt."

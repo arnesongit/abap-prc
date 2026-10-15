@@ -15,7 +15,7 @@ msgstr "Information"
 
 #: DOMA/ZPRC_MESSAGE_SEVERITY_CODE/DDTEXT A, maxlen=60
 msgid "Message Severity"
-msgstr "Nachrichtentyp"
+msgstr "Nachrichtencode"
 
 #: VALU/ZPRC_MESSAGE_SEVERITY_CODE/DDTEXT 00001, maxlen=60
 msgid "Success"

@@ -33,7 +33,7 @@ msgstr "Ausführungs-Typ"
 
 #: TLGS/DDLXZC_PRC_RUN 06/0000070005TEXT, maxlen=255
 msgid "Job Count"
-msgstr "Job-Anzahl"
+msgstr "Job-Nummer"
 
 #: TLGS/DDLXZC_PRC_RUN 06/0000090005TEXT, maxlen=255
 msgid "Job ID"
@@ -97,7 +97,7 @@ msgstr "Lauf App UI Annotations"
 
 #: TLGS/DDLXZC_PRC_RUN 06/0000050005TEXT, maxlen=255
 msgid "Status"
-msgstr "Status"
+msgstr "Zustand"
 
 #: TLGS/DDLXZC_PRC_RUN 06/0000270005TEXT, maxlen=255
 msgid "Total Number"

@@ -7,8 +7,8 @@ msgstr ""
 
 #: TLGS/APLOZBALI_PRC 02/0000010003OBJTXT, maxlen=60
 msgid "ABAP Processing Center"
-msgstr ""
+msgstr "ABAP Processing Center"
 
 #: TLGS/APLOZBALI_PRC 04/0000010004SUBOBJTXT, maxlen=60
 msgid "ABAP Processing Center - Processing Objects"
-msgstr ""
+msgstr "ABAP Processing Center - Verarbeite Objekte"

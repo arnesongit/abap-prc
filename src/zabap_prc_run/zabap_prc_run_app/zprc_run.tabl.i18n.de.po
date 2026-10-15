@@ -7,4 +7,4 @@ msgstr ""
 
 #: TABT/ZPRC_RUN/1_DD02T A, maxlen=60
 msgid "Persistency of the runs"
-msgstr ""
+msgstr "Persistenz der Läufe"

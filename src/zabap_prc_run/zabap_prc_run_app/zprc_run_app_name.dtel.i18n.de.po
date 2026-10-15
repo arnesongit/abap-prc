@@ -7,14 +7,14 @@ msgstr ""
 
 #: DTEL/ZPRC_RUN_APP_NAME/SCRTEXT_S, maxlen=10
 msgid "App Name"
-msgstr ""
+msgstr "App-Name"
 
 #: DTEL/ZPRC_RUN_APP_NAME/REPTEXT, maxlen=55
 #: DTEL/ZPRC_RUN_APP_NAME/SCRTEXT_L, maxlen=40
 #: DTEL/ZPRC_RUN_APP_NAME/SCRTEXT_M, maxlen=20
 msgid "Application Name"
-msgstr ""
+msgstr "Applikationsname"
 
 #: DTEL/ZPRC_RUN_APP_NAME/DDTEXT, maxlen=60
 msgid "Names of applications applying the RUN pattern"
-msgstr ""
+msgstr "Applikation, die Startparemeter liefert"

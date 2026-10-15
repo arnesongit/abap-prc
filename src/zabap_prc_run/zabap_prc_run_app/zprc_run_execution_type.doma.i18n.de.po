@@ -7,16 +7,16 @@ msgstr ""
 
 #: DOMA/ZPRC_RUN_EXECUTION_TYPE/DDTEXT A, maxlen=60
 msgid "Execution Type of the run (Regular, Test Mode,...)"
-msgstr ""
+msgstr "Ausführungsart des Laufs"
 
 #: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00003, maxlen=60
 msgid "Preview Mode"
-msgstr ""
+msgstr "Preview-Modus"
 
 #: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00001, maxlen=60
 msgid "Regular Execution"
-msgstr ""
+msgstr "Normale Ausführung"
 
 #: VALU/ZPRC_RUN_EXECUTION_TYPE/DDTEXT 00002, maxlen=60
 msgid "Test Mode"
-msgstr ""
+msgstr "Test-Modus"

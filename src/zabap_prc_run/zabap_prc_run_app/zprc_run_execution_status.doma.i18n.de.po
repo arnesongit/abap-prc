@@ -7,16 +7,16 @@ msgstr ""
 
 #: DOMA/ZPRC_RUN_EXECUTION_STATUS/DDTEXT A, maxlen=60
 msgid "Execution Status of the run"
-msgstr ""
+msgstr "Ausführungs-Status des Laufs"
 
 #: VALU/ZPRC_RUN_EXECUTION_STATUS/DDTEXT 00002, maxlen=60
 msgid "Finished"
-msgstr ""
+msgstr "Beendet"
 
 #: VALU/ZPRC_RUN_EXECUTION_STATUS/DDTEXT 00003, maxlen=60
 msgid "Planned"
-msgstr ""
+msgstr "Geplant"
 
 #: VALU/ZPRC_RUN_EXECUTION_STATUS/DDTEXT 00001, maxlen=60
 msgid "Started"
-msgstr ""
+msgstr "Gestartet"

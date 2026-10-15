@@ -7,4 +7,4 @@ msgstr ""
 
 #: TABT/ZPRC_PROC_OBJECT/1_DD02T A, maxlen=60
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"

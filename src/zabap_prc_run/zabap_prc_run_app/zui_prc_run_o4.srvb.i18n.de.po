@@ -7,4 +7,4 @@ msgstr ""
 
 #: TLGS/SRVBZUI_PRC_RUN_O4 02/0000010004DESCRIPTION, maxlen=60
 msgid "Run App"
-msgstr ""
+msgstr "Verarbeitungslauf-App"

@@ -11,4 +11,4 @@ msgstr ""
 #: DTEL/ZPRC_STATE/SCRTEXT_M, maxlen=20
 #: DTEL/ZPRC_STATE/SCRTEXT_S, maxlen=10
 msgid "State"
-msgstr "Status"
+msgstr "Zustand"

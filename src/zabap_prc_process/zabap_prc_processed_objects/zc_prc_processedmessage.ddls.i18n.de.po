@@ -7,7 +7,7 @@ msgstr ""
 
 #: DDLT/ZC_PRC_PROCESSEDMESSAGE/00001 DDDDLSRCT, maxlen=60
 msgid "Processed Object"
-msgstr "Verarbeitungsobjekt"
+msgstr "Verarbeitetes Objekt"
 
 #: DDLS/ZC_PRC_PROCESSEDMESSAGE/00001 DDDDLSRC02BT, maxlen=60
 msgid "Processed Step"

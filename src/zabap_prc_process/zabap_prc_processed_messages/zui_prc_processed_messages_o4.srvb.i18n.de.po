@@ -7,4 +7,4 @@ msgstr ""
 
 #: TLGS/SRVBZUI_PRC_PROCESSED_MESSAGES_O4 02/0000010004DESCRIPTION, maxlen=60
 msgid "Processed Messages"
-msgstr "Erzeugte Meldungen"
+msgstr "Erzeugte Nachrichten"

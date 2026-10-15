@@ -7,14 +7,14 @@ msgstr ""
 
 #: DTEL/ZPRC_RUN_EXECUTION_STATUS/SCRTEXT_S, maxlen=10
 msgid "Exec. Stat"
-msgstr ""
+msgstr "Status"
 
 #: DTEL/ZPRC_RUN_EXECUTION_STATUS/REPTEXT, maxlen=55
 #: DTEL/ZPRC_RUN_EXECUTION_STATUS/SCRTEXT_L, maxlen=40
 #: DTEL/ZPRC_RUN_EXECUTION_STATUS/SCRTEXT_M, maxlen=20
 msgid "Execution Status"
-msgstr ""
+msgstr "Ausführungsstatus"
 
 #: DTEL/ZPRC_RUN_EXECUTION_STATUS/DDTEXT, maxlen=60
 msgid "Execution Status of the Run"
-msgstr ""
+msgstr "Ausführungsstatus des Laufs"
