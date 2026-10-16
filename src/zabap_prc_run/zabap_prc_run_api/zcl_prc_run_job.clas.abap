@@ -89,7 +89,7 @@ CLASS zcl_prc_run_job IMPLEMENTATION.
            ENTITY run
            UPDATE FIELDS ( MessageSeverity ExecutionStatus JobEnd )
            WITH VALUE #( ( %key-uuid       = mv_current_run_uuid
-                           ExecutionStatus = 'FI'
+                           ExecutionStatus = zif_prc_run=>co_execution_status-finished
                            MessageSeverity = mv_message_status
                            JobEnd          = lv_timestamp ) )
            FAILED DATA(failed)
