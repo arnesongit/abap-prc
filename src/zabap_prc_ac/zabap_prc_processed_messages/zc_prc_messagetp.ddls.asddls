@@ -30,7 +30,7 @@ define root view entity ZC_PRC_MessageTP
   key MessageText,
   key ProcessName,
 
-      // Displayed text in the logon language (Nr. 17)
+      // Displayed text in the logon language (Nr. 17), colored by severity as in the list
       @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_PRC_MESSAGE_TEXT'
       @EndUserText.label: 'Message Text'
       @UI.lineItem: [ { position: 10,
@@ -44,7 +44,10 @@ define root view entity ZC_PRC_MessageTP
                         inline: true,
                         invocationGrouping: #ISOLATED } ]
       // Resume also on the object page (header action), as in the processed object app
-      @UI.identification: [ { position: 3, qualifier: 'MSG_INFO' },
+      @UI.identification: [ { position: 3,
+                              qualifier: 'MSG_INFO',
+                              criticality: 'MessageSeverityCode',
+                              criticalityRepresentation: #WITH_ICON },
                             { position: 15,
                               type: #FOR_ACTION,
                               dataAction: 'resumeProcessing',

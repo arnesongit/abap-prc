@@ -2,14 +2,6 @@
 "! Central place for all checks against authorization object ZPRC_RUN
 "! (fields ACTVT and ZPRCRUNAPP). Used by the RAP behavior implementation
 "! of the runs.
-"! <p class="shorttext synchronized">ABAP-PRC: Authorization checks for object ZPRC_RUN</p>
-"! Central place for all checks against authorization object ZPRC_RUN
-"! (fields ACTVT and ZPRCRUNAPP). Used by the RAP behavior implementation
-"! of the runs.
-"! <p class="shorttext synchronized">ABAP-PRC: Authorization checks for object ZPRC_RUN</p>
-"! Central place for all checks against authorization object ZPRC_RUN
-"! (fields ACTVT and ZPRCRUNAPP). Used by the RAP behavior implementation
-"! of the runs.
 CLASS zcl_prc_auth_run DEFINITION
   PUBLIC FINAL
   CREATE PRIVATE.
@@ -41,7 +33,9 @@ CLASS zcl_prc_auth_run DEFINITION
       RETURNING VALUE(r_authorized) TYPE abap_bool.
 
     "! Same check as IS_AUTHORIZED, result in the format of a RAP
-    "! authorization result (if_abap_behv=>auth-allowed / -unauthorized)
+    "! authorization result (if_abap_behv=>auth-allowed / -unauthorized).
+    "! Typed with the released IF_ABAP_BEHV=>T_XFLAG (technically the same as
+    "! ABP_BEHV_AUTH, which is not released for ABAP Cloud in 2023).
     CLASS-METHODS get_behv_authorization
       IMPORTING i_application_name TYPE zprc_run_app_name
                 i_activity         TYPE ty_activity

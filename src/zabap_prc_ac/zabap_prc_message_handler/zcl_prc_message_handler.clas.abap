@@ -1,35 +1,33 @@
 "! <p class="shorttext synchronized">Standard implementation of ZIF_PRC_MESSAGE_HANDLER</p>
 "!
-"! One instance per unit of work.
-"!
-"! Severities: W, I and S are kept. Everything else (E, A, X, ...) is treated
-"! and stored as error E, see NORMALIZE_SEVERITY.
-"!
-"! Header: the last message of the highest severity E > S > W > I. A failure
-"! without any error message adds ZPRC_PROCESS_MESSAGE/002.
-"! <p class="shorttext synchronized">Standard implementation of ZIF_PRC_MESSAGE_HANDLER</p>
-"!
 "! One instance per step, created by the processing engine and handed to the
 "! transition. The rules (failure, severities, header) are documented at
 "! ZIF_PRC_MESSAGE_HANDLER.
 "!
+"! Only the engine creates handlers (global friends). A transition always
+"! works with the handler it is given; tests use ZCL_PRC_MSG_HANDLER_FOR_TEST.
+"!
 "! Every message entering the handler passes TO_STORED_MESSAGE: severity
 "! normalized, text resolved. Messages are kept in order of arrival; the
 "! header is updated with every message.
-CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE.
+CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE
+  GLOBAL FRIENDS zcl_prc_object_step_loop
+                 zcl_prc_step_8_isolation_task
+                 zcl_prc_step_log
+                 zcl_prc_msg_handler_for_test.
 
   PUBLIC SECTION.
     INTERFACES zif_prc_message_handler.
-
-    "! Creates a fresh, empty handler for one step.
-    "!
-    "! @parameter r_message_handler | New handler.
-    CLASS-METHODS create_message_handler RETURNING VALUE(r_message_handler) TYPE REF TO zif_prc_message_handler.
 
   PRIVATE SECTION.
     DATA ms_header   TYPE zif_prc_message_handler=>ty_message_details.
     DATA mt_messages TYPE zif_prc_message_handler=>tt_messages.
     DATA mv_failed   TYPE abap_bool.
+
+    "! Creates a fresh, empty handler for one step (engine and tests only).
+    "!
+    "! @parameter r_message_handler | New handler.
+    CLASS-METHODS create_message_handler RETURNING VALUE(r_message_handler) TYPE REF TO zif_prc_message_handler.
 
     "! Marks the step as failed and raises.
     "! Without any error message, ZPRC_PROCESS_MESSAGE/002 is added first, so a
@@ -284,4 +282,3 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     r_has_errors = mv_failed.
   ENDMETHOD.
 ENDCLASS.
-

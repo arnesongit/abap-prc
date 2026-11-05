@@ -2,16 +2,30 @@
 
 // Only the technical keys are hidden: ZI_PRC_HeaderMessageGroup reads from this
 // view and would inherit @UI.hidden of every other element. The columns of the
-// object list are defined by the line items.
+// object list are defined here completely - line items inherited from the underlying
+// views (processed object, message) are switched off with null.
 annotate entity ZI_PRC_LatestHeaderMessage with
 {
+  // Navigation to the processed object: the UUID is the column (Fiori Elements only
+  // passes fields the table loads) and the semantic key of the target app; the
+  // external ID is its text (text element in ZC_PRC_ObjectForMessageTP)
   @EndUserText.label: 'Processed Object'
   @UI.lineItem: [ { position: 10,
                     type: #WITH_INTENT_BASED_NAVIGATION,
                     semanticObject: 'ABAP_PRC_ProcessedObject',
                     semanticObjectAction: 'show',
-                    semanticObjectBinding: [ { element: 'UUID', localElement: 'ProcessedObjectUUID' } ] } ]
+                    semanticObjectBinding: [ { localElement: 'ProcessedObjectUUID', element: 'UUID' } ] } ]
+  @UI.textArrangement: #TEXT_ONLY
+  ProcessedObjectUUID;
+
+  // Shown as text of ProcessedObjectUUID, no column of its own
+  @EndUserText.label: 'Processed Object'
+  @UI.lineItem: null
   ExternalProcessedObjectID;
+
+  // The message is the selected group itself
+  @UI.lineItem: null
+  MessageText;
 
   @EndUserText.label: 'Created By'
   @UI.lineItem: [ { position: 20 } ]
@@ -21,9 +35,14 @@ annotate entity ZI_PRC_LatestHeaderMessage with
   @UI.lineItem: [ { position: 30 } ]
   CreatedAt;
 
-  @UI.hidden: true
-  StepUUID;
+  @EndUserText.label: 'Start State'
+  @UI.lineItem: [ { position: 40 } ]
+  StartState;
+
+  @EndUserText.label: 'End State'
+  @UI.lineItem: [ { position: 50 } ]
+  EndState;
 
   @UI.hidden: true
-  ProcessedObjectUUID;
+  StepUUID;
 }

@@ -3,6 +3,10 @@
 @Metadata.allowExtensions: true
 @Search.searchable: true
 
+// Semantic key: navigation from other apps (message app, notifications) passes the
+// UUID - Fiori Elements opens the object page directly when they identify one object
+@ObjectModel.semanticKey: [ 'UUID' ]
+
 @UI.headerInfo: { typeName: 'Processed Object',
                   typeNamePlural: 'Processed Objects',
                   title: { type: #STANDARD, value: 'ExternalProcessedObjectID' },

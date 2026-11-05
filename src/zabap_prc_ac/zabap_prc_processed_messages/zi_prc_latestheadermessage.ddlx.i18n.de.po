@@ -14,8 +14,17 @@ msgid "Created By"
 msgstr "Angelegt von"
 
 #: TLGS/DDLXZI_PRC_LATESTHEADERMESSAGE 06/0000030005TEXT, maxlen=255
+msgid "End State"
+msgstr ""
+
+#: TLGS/DDLXZI_PRC_LATESTHEADERMESSAGE 06/0000040005TEXT, maxlen=255
+#: TLGS/DDLXZI_PRC_LATESTHEADERMESSAGE 06/0000050005TEXT, maxlen=255
 msgid "Processed Object"
 msgstr "Verarbeitetes Objekt"
+
+#: TLGS/DDLXZI_PRC_LATESTHEADERMESSAGE 06/0000060005TEXT, maxlen=255
+msgid "Start State"
+msgstr ""
 
 #: TLGS/DDLXZI_PRC_LATESTHEADERMESSAGE 02/0000010004DESCRIPTION, maxlen=60
 msgid "UI annotations objects for a message"

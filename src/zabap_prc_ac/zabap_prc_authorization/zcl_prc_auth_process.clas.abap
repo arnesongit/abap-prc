@@ -2,10 +2,6 @@
 "! Central place for all checks against authorization object ZPRC_PROC
 "! (fields ACTVT and ZPRCNAME). Used by the RAP behavior implementations
 "! of the processed objects and by the jobs of the processing center.
-"! <p class="shorttext synchronized">ABAP-PRC: Authorization checks for object ZPRC_PROC</p>
-"! Central place for all checks against authorization object ZPRC_PROC
-"! (fields ACTVT and ZPRCNAME). Used by the RAP behavior implementations
-"! of the processed objects and by the jobs of the processing center.
 CLASS zcl_prc_auth_process DEFINITION
   PUBLIC FINAL
   CREATE PRIVATE.
@@ -38,8 +34,6 @@ CLASS zcl_prc_auth_process DEFINITION
                 i_activity          TYPE ty_activity
       RETURNING VALUE(r_authorized) TYPE abap_bool.
 
-    "! Same check as IS_AUTHORIZED, result in the format of a RAP
-    "! authorization result (if_abap_behv=>auth-allowed / -unauthorized)
     "! Same check as IS_AUTHORIZED, result in the format of a RAP
     "! authorization result (if_abap_behv=>auth-allowed / -unauthorized).
     "! Typed with the released IF_ABAP_BEHV=>T_XFLAG (technically the same as
