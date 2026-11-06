@@ -10,7 +10,7 @@ CLASS zcl_prc_notif_channel_mail DEFINITION
   PUBLIC SECTION.
     INTERFACES zif_prc_notification_channel.
 
-    "! Sender until the process configuration (Nr. 18) provides one
+    "! Sender until a process configuration provides one
     CONSTANTS co_sender TYPE string VALUE `no_reply@abap-processing-center.de`.
 
   PRIVATE SECTION.

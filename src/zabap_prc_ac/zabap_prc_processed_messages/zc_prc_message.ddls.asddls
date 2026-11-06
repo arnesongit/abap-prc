@@ -23,7 +23,7 @@ define root view entity ZC_PRC_Message
   key MessageVariable2,
   key MessageVariable3,
   key MessageVariable4,
-      // Persisted text (language of the processing user): search only (Nr. 17);
+      // Persisted text (language of the processing user): search only;
       // the facets stay on this element
       @Search.defaultSearchElement: true
       @Search.fuzzinessThreshold: 0.7
@@ -32,7 +32,7 @@ define root view entity ZC_PRC_Message
   key MessageText,
   key ProcessName,
 
-      // Displayed text in the logon language (Nr. 17)
+      // Displayed text in the logon language
       @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_PRC_MESSAGE_TEXT'
       @EndUserText.label: 'Message Text'
       @UI.lineItem: [ { position: 10,

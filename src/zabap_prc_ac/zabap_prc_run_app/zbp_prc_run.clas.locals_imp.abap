@@ -95,31 +95,48 @@ CLASS lhc_Run IMPLEMENTATION.
 
   METHOD initiateRun.
     DATA lt_parameter TYPE cl_apj_rt_api=>tt_job_parameter_value.
+    DATA lr_template_parameter TYPE REF TO data.
+    FIELD-SYMBOLS <lt_template_parameter> TYPE ANY TABLE.
 
     LOOP AT keys INTO DATA(key).
       CLEAR lt_parameter.
       /ui2/cl_json=>deserialize( EXPORTING json = key-%param-selectOptionString
                                  CHANGING  data = lt_parameter ).
 
-      " Check before the run exists (Nr. 40.9): the save phase can no longer change the run,
+      " Check before the run exists: the save phase can no longer change the run,
       " so a run whose job cannot be scheduled would stay "planned" forever
       DATA(ls_error) = VALUE symsg( ).
+      DATA(lv_template_name) = CONV cl_apj_rt_api=>ty_template_name( key-%param-jobTemplateName ).
       TRY.
-          IF cl_apj_rt_api=>can_schedule_job( iv_job_template_name = CONV #( key-%param-jobTemplateName ) ) = abap_false.
+          IF cl_apj_rt_api=>can_schedule_job( iv_job_template_name = lv_template_name ) = abap_false.
             " Job template &1 does not exist or you are not authorized to schedule it
             ls_error = VALUE #( msgid = 'ZPRC_RUN' msgno = '010' msgv1 = key-%param-jobTemplateName ).
           ELSE.
-            DATA(lt_template_parameter) = cl_apj_rt_api=>get_template_param_values(
-                                              iv_job_template_name = CONV #( key-%param-jobTemplateName ) ).
-            " P_UUID is added by the framework below
-            LOOP AT lt_parameter INTO DATA(ls_parameter) WHERE name <> zif_prc_run=>co_parameter-p_uuid.
-              IF NOT line_exists( lt_template_parameter[ name = ls_parameter-name ] ).
-                " Parameter &1 is not defined in job &2
-                ls_error = VALUE #( msgid = 'ZPRC_RUN' msgno = '001'
-                                    msgv1 = ls_parameter-name msgv2 = key-%param-jobTemplateName ).
-                EXIT.
-              ENDIF.
-            ENDLOOP.
+            " Parameters of the template: GET_TEMPLATE_PARAM_VALUES and its result type do not
+            " exist in S/4HANA 2023, so both are addressed dynamically. Without them the check is
+            " skipped; an unknown parameter then only fails when the job is scheduled.
+            TRY.
+                CREATE DATA lr_template_parameter TYPE ('\CLASS=CL_APJ_RT_API\TYPE=TT_TEMPL_PARAM_VAL_MULTISTEP').
+                ASSIGN lr_template_parameter->* TO <lt_template_parameter>.
+                CALL METHOD ('CL_APJ_RT_API')=>('GET_TEMPLATE_PARAM_VALUES')
+                  EXPORTING
+                    iv_job_template_name = lv_template_name
+                  RECEIVING
+                    rt_parameters        = <lt_template_parameter>.
+
+                " P_UUID is added by the framework below
+                LOOP AT lt_parameter INTO DATA(ls_parameter) WHERE name <> zif_prc_run=>co_parameter-p_uuid.
+                  READ TABLE <lt_template_parameter> WITH KEY ('NAME') = ls_parameter-name TRANSPORTING NO FIELDS.
+                  IF sy-subrc <> 0.
+                    " Parameter &1 is not defined in job &2
+                    ls_error = VALUE #( msgid = 'ZPRC_RUN' msgno = '001'
+                                        msgv1 = ls_parameter-name msgv2 = key-%param-jobTemplateName ).
+                    EXIT.
+                  ENDIF.
+                ENDLOOP.
+              CATCH cx_sy_create_data_error cx_sy_dyn_call_error ##NO_HANDLER.
+                " S/4HANA 2023: no parameter check
+            ENDTRY.
           ENDIF.
         CATCH cx_apj_rt.
           " Job template &1 does not exist or you are not authorized to schedule it
@@ -202,14 +219,14 @@ CLASS lsc_saver IMPLEMENTATION.
       ENDIF.
       TRY.
           " No commit inside: the job becomes visible to the scheduler with the commit
-          " of this LUW, together with the run (no race with _initialize_run, Nr. 40.9)
+          " of this LUW, together with the run (no race with _initialize_run)
           zcl_prc_job_scheduler=>get( )->schedule_immediately( i_template_name = CONV #( ls_job_params-job_template_name )
                                                                i_job_text      = CONV #( ls_job_params-job_name )
                                                                i_parameters    = ls_job_params-parameter ).
         CATCH cx_apj_rt INTO DATA(lo_exception).
           " Template, authorization and parameters are checked in initiateRun; what is left are
           " technical errors. The run cannot be changed here anymore (the managed save writes it
-          " after this method), so it stays "planned" - the caller is told why (Nr. 40.9)
+          " after this method), so it stays "planned" - the caller is told why
           DATA(lv_text) = lo_exception->get_text( ).
           DATA(lo_previous) = lo_exception->previous.
           WHILE lo_previous IS BOUND.

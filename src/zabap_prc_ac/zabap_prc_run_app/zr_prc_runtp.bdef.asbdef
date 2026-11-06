@@ -10,14 +10,18 @@ define authorization context NoCheckWhenPrivileged {
 
 define behavior for ZR_PRC_RunTP alias Run
 extensible
-persistent table zprc_run ##UNMAPPED_FIELD[SEVERITYCODESUCCESS] ##UNMAPPED_FIELD[SEVERITYCODEERROR] ##UNMAPPED_FIELD[MESSAGESEVERITY]
-                          ##UNMAPPED_FIELD[NUMBEROFERRORS] ##UNMAPPED_FIELD[NUMBEROFSUCCESS] ##UNMAPPED_FIELD[CURRENTLYPROCESSEDNUMBER]
+persistent table zprc_run
+// Not supported in S/4HANA 2023, active again once 2023 is no longer supported:
+// ##UNMAPPED_FIELD[SEVERITYCODESUCCESS] ##UNMAPPED_FIELD[SEVERITYCODEERROR] ##UNMAPPED_FIELD[MESSAGESEVERITY]
+// ##UNMAPPED_FIELD[NUMBEROFERRORS] ##UNMAPPED_FIELD[NUMBEROFSUCCESS] ##UNMAPPED_FIELD[CURRENTLYPROCESSEDNUMBER]
 with additional save
 lock master
 authorization master ( instance )
 {
-  // Everybody may call create and initiateRun; the precheck checks the application name
-  create ( precheck, authorization : none );
+  // Everybody may call create and initiateRun; the precheck checks the application name.
+  // No "authorization : none" on create: not supported in S/4HANA 2023. Without global
+  // authorization, create is not subject to the instance authorization anyway.
+  create ( precheck );
   update;
   delete;
   field ( readonly, numbering : managed ) UUID;
@@ -43,7 +47,7 @@ authorization master ( instance )
       ExecutionStatus          = execution_status;
       TotalNumber              = total_number;
       CreatedBy                = created_by;
-      // Reason of an aborted run (Nr. 40.6), written by the run job
+      // Reason of an aborted run, written by the run job
       MessageClass             = msgid;
       MessageNumber            = msgno;
       MessageVariable1         = msgv1;

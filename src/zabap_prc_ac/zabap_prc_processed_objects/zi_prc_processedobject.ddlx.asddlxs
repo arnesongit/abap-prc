@@ -134,14 +134,14 @@ annotate entity ZI_PRC_ProcessedObject with
   @UI.lineItem: [ { position: 45, importance: #MEDIUM } ]
   RetryCount;
 
-  // Interval filter (Nr. 43): last processing of the object
+  // Interval filter: last processing of the object
   @Consumption.filter: { selectionType: #INTERVAL, multipleSelections: false }
   @UI.selectionField: [ { position: 40 } ]
   @UI.fieldGroup: [ { position: 10, qualifier: 'qExecInfos' } ]
   @UI.lineItem: [ { position: 30, importance: #MEDIUM } ]
   LastChangedAt;
 
-  // Value help: users who appear on processed objects (Nr. 43)
+  // Value help: users who appear on processed objects
   @Consumption.valueHelpDefinition: [ { entity: { name: 'ZI_PRC_UserVH', element: 'UserID' } } ]
   @UI.fieldGroup: [ { position: 20, qualifier: 'qExecInfos' } ]
   @UI.lineItem: [ { position: 120, importance: #MEDIUM } ]
@@ -158,7 +158,7 @@ annotate entity ZI_PRC_ProcessedObject with
   @EndUserText.label: 'Factory Class Name'
   FactoryClassName;
 
-  // Interval filter (Nr. 43): creation of the object
+  // Interval filter: creation of the object
   @EndUserText.label: 'Created At'
   @Consumption.filter: { selectionType: #INTERVAL, multipleSelections: false }
   @UI.selectionField: [ { position: 35 } ]

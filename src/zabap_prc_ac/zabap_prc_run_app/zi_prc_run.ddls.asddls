@@ -41,7 +41,7 @@ define view entity ZI_PRC_Run
       Run.total_number                      as TotalNumber,
       Run.created_by                        as CreatedBy,
 
-      // Reason of an aborted run (ExecutionStatus AB, Nr. 40.6)
+      // Reason of an aborted run (ExecutionStatus AB)
       Run.msgid                             as MessageClass,
       Run.msgno                             as MessageNumber,
       Run.msgv1                             as MessageVariable1,

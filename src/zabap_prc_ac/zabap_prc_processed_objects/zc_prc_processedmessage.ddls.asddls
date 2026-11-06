@@ -16,13 +16,13 @@ define view entity ZC_PRC_ProcessedMessage
       ProcessedObjectUUID,
       ProcessedStepUUID,
 
-      // Persisted text (language of the processing user), not displayed (Nr. 17)
+      // Persisted text (language of the processing user), not displayed
       @UI.identification: null
       @UI.lineItem: null
       @UI.hidden: true
       MessageText,
 
-      // Displayed text in the logon language (Nr. 17)
+      // Displayed text in the logon language
       @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_PRC_MESSAGE_TEXT'
       @EndUserText.label: 'Message Text'
       @UI.identification: [ { position: 20 } ]

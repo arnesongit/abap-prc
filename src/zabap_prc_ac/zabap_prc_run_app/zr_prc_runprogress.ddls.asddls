@@ -3,9 +3,9 @@
 @Metadata.allowExtensions: true
 
 // One row per run: processed objects, objects with error/success header and the
-// worst severity - one grouping instead of three views (Nr. 40.2).
+// worst severity - one grouping instead of three views.
 // Success = header is not an error (S, W, I), like the list "Processed Objects with
-// Success" (MessageSeverity NE E): errors + successes = processed objects (Nr. 40.3).
+// Success" (MessageSeverity NE E): errors + successes = processed objects.
 // A and X are stored as E by the message handler.
 // Only objects of a run that have a latest step: inner joins instead of IS NOT INITIAL,
 // which 2023 does not support on RAW fields (UUIDs).

@@ -87,7 +87,7 @@ CLASS zcl_prc_run_job DEFINITION
                             EXPORTING e_range          TYPE ANY TABLE.
 
     "! Send a notification when the run has ended (process PRC_RUN_COMPLETED).
-    "! Default: always. Redefine to switch it off; later from the process configuration (Nr. 18).
+    "! Default: always. Redefine to switch it off; later from a process configuration.
     "!
     "! @parameter r_notify | ABAP_TRUE to notify the user who started the run.
     METHODS notify_on_completion RETURNING VALUE(r_notify) TYPE abap_bool.

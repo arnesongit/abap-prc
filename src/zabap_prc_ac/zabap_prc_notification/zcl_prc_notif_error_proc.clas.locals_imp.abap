@@ -29,8 +29,12 @@ CLASS lcl_prepare IMPLEMENTATION.
     m_process_name = ls_payload-process_name.
     lv_mail = ls_payload-mail_address.
 
-    " MessageText = header of the latest step, as shown in the list of processed steps
-    SELECT FROM ZI_PRC_ProcessedObject
+    " MessageText = header of the latest step, as shown in the list of processed steps.
+    " Privileged: the notification is a framework function and runs as the job user
+    " (e.g. retry job, ZPRC_PROC activity 16 only); the recipient is the mail address
+    " stored at the objects. Without it, the DCL (activity 03) would silently find
+    " nothing and the notification would end as finished without a mail.
+    SELECT FROM ZI_PRC_ProcessedObject WITH PRIVILEGED ACCESS
       FIELDS UUID, ExternalProcessedObjectID, MessageText, LastChangedAt
       WHERE ProcessName     = @ls_payload-process_name
         AND MailAddress     = @lv_mail

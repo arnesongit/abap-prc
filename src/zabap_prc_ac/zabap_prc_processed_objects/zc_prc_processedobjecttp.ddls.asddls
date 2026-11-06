@@ -69,7 +69,7 @@ define root view entity ZC_PRC_ProcessedObjectTP
 
       ExternalProcessedObjectUUID,
 
-      // Persisted text (language of the processing user): search and filter only (Nr. 17)
+      // Persisted text (language of the processing user): search and filter only
       @Search.defaultSearchElement: true
       @Search.fuzzinessThreshold: 0.7
       @UI.fieldGroup: null
@@ -77,7 +77,7 @@ define root view entity ZC_PRC_ProcessedObjectTP
       @UI.hidden: true
       MessageText,
 
-      // Displayed text: header of the latest step in the logon language (Nr. 17)
+      // Displayed text: header of the latest step in the logon language
       @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_PRC_MESSAGE_TEXT'
       @EndUserText.label: 'Message'
       @UI.fieldGroup: [ { qualifier: 'qLatestInfos',

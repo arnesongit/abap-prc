@@ -36,7 +36,7 @@ define root view entity ZC_PRC_RunTP
       TotalNumber,
       CreatedBy,
 
-      // Reason of an aborted run (Nr. 40.6); persisted fields not displayed
+      // Reason of an aborted run; persisted fields not displayed
       @UI.hidden: true
       MessageClass,
       @UI.hidden: true

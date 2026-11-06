@@ -64,7 +64,7 @@ CLASS zcl_prc_run_initiator IMPLEMENTATION.
            FAILED DATA(ls_failed).
 
     " Rejected (e.g. unknown parameter or template): no run, the reasons go to the caller
-    " instead of a short dump (formerly ASSERT, Nr. B1 of 25.10.)
+    " instead of a short dump
     IF ls_failed IS NOT INITIAL OR NOT line_exists( ls_mapped-run[ 1 ] ).
       LOOP AT ls_reported-run INTO DATA(ls_message) WHERE %msg IS BOUND.
         APPEND ls_message-%msg TO et_messages.

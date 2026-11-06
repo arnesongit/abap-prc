@@ -17,13 +17,13 @@ define view entity ZC_PRC_ProcessedStep
       StartState,
       EndState,
 
-      // Persisted header text (language of the processing user), not displayed (Nr. 17)
+      // Persisted header text (language of the processing user), not displayed
       @UI.identification: null
       @UI.lineItem: null
       @UI.hidden: true
       MessageText,
 
-      // Displayed header text in the logon language (Nr. 17)
+      // Displayed header text in the logon language
       @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_PRC_MESSAGE_TEXT'
       @EndUserText.label: 'Message Text'
       @UI.identification: [ { position: 20 } ]

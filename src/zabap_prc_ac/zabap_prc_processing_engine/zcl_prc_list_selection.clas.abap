@@ -69,6 +69,13 @@ CLASS zcl_prc_list_selection IMPLEMENTATION.
     selected_process_names = VALUE #( FOR p IN mt_parameters WHERE ( selname = zcl_prc_retry_job=>c_process_name )
                                       ( CORRESPONDING #( p ) ) ).
 
+    " Privileged: this selection serves every way of processing (direct execution after
+    " creation, run job, processing API, retry job), which must not depend on the user who
+    " triggers it. The DCL of ZI_PRC_ProcessedObject (ZPRC_PROC activity 03) would also be
+    " the wrong check: processing needs activity 16, and adding 16 to that DCL would let
+    " every user with 16 read in the apps. Where a user decides what is processed, the
+    " entry point restricts the process names beforehand: the retry job
+    " (ZCL_PRC_RETRY_JOB->_RESTRICT_TO_AUTHORIZED, ZPRC_PROC activity 16).
     SELECT FROM ZR_PRC_ProcessedObject AS ProcessedObject
       FIELDS *
       WHERE State <> @state_finished

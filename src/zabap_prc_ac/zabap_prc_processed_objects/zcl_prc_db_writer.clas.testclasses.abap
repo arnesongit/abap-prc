@@ -94,7 +94,7 @@ CLASS ltc_db_writer IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD severity_codes.
-    " Severity codes are derived for messages (the step header is a message since Nr. 15 B)
+    " Severity codes are derived for messages (the step header is a message)
     given_object( ).
     cut->save( i_create = VALUE #( processedmessage = VALUE #(
         ( UUID = '000000000000000000000000000000E1' ProcessedStepUUID = s1 ProcessedObjectUUID = o1 MessageSeverity = 'E' )
