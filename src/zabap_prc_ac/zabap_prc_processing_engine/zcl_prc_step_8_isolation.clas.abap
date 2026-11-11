@@ -14,9 +14,10 @@
 "! <li>without a short dump (MESSAGE A/E): 019 with the text of the original
 "! message; without a dump finder (BTP) also where to look (012)</li>
 "! </ul>
-"! The short dump is found exactly through the EPP transaction ID the step
-"! session registered under the marker of the step. The transition is not
-"! handed out, it lives in the other session.
+"! The only error is the header (ZCL_PRC_STEP_HEADER=>FOR_FAILURE). The short
+"! dump is found exactly through the EPP transaction ID the step session
+"! registered under the marker of the step. The transition is not handed out,
+"! it lives in the other session.
 CLASS zcl_prc_step_8_isolation DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -54,16 +55,19 @@ CLASS zcl_prc_step_8_isolation DEFINITION PUBLIC FINAL CREATE PUBLIC.
     METHODS add_abort_messages IMPORTING i_abort_message   TYPE string
                                          i_marker          TYPE sysuuid_x16
                                          i_started_at      TYPE timestampl
-                                         i_message_handler TYPE REF TO zif_prc_message_handler
-                               RAISING   zcx_prc_unit_of_work_failed.
+                                         i_message_handler TYPE REF TO zif_prc_message_handler.
 
     "! Adds the short dump of the step session (013, 014).
     "!
     "! @parameter i_dump            | The short dump.
     "! @parameter i_message_handler | Handler of this session.
     METHODS add_dump_messages IMPORTING i_dump            TYPE zif_prc_dump_finder=>ty_dump
-                                        i_message_handler TYPE REF TO zif_prc_message_handler
-                              RAISING   zcx_prc_unit_of_work_failed.
+                                        i_message_handler TYPE REF TO zif_prc_message_handler.
+
+    "! Adds the message in SY without failing: the failure is decided by this layer.
+    "!
+    "! @parameter i_message_handler | Handler of this session.
+    METHODS add_from_sy IMPORTING i_message_handler TYPE REF TO zif_prc_message_handler.
 ENDCLASS.
 
 
@@ -107,19 +111,15 @@ CLASS zcl_prc_step_8_isolation IMPLEMENTATION.
 
 
   METHOD write_abort.
-    TRY.
-        add_abort_messages( i_abort_message   = i_abort_message
-                            i_marker          = i_marker
-                            i_started_at      = i_started_at
-                            i_message_handler = i_message_handler ).
-      CATCH zcx_prc_unit_of_work_failed ##NO_HANDLER.
-        " Cannot happen with i_fail_on_error_message = abap_false
-    ENDTRY.
+    add_abort_messages( i_abort_message   = i_abort_message
+                        i_marker          = i_marker
+                        i_started_at      = i_started_at
+                        i_message_handler = i_message_handler ).
 
     " The state before the step, only the retry data change
     r_state = mo_step_writer->write( i_start_state     = i_state-State
                                      i_state           = mo_step_writer->with_next_retry( i_state )
-                                     i_header          = i_message_handler->get_header( )
+                                     i_header          = zcl_prc_step_header=>for_failure( i_message_handler )
                                      i_message_handler = i_message_handler ).
     " No RAP buffer here, so COMMIT ENTITIES alone would not commit the step written by SQL
     COMMIT ENTITIES.
@@ -137,15 +137,14 @@ CLASS zcl_prc_step_8_isolation IMPLEMENTATION.
                                                     THEN mo_dump_finder->find_dump( i_marker = i_marker
                                                                                     i_from   = i_started_at ) ).
 
-    " Recorded without failing the handler: the failure is decided here.
-    " The only error message becomes the header of the step.
+    " The only error message becomes the header of the step
     IF dump IS NOT INITIAL.
       " Program error: the header speaks to the end user, the details to the administrator
       MESSAGE e018(zprc_process_message) INTO DATA(message) ##NEEDED.
-      i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+      add_from_sy( i_message_handler ).
       MESSAGE i011(zprc_process_message) WITH text+0(50) text+50(50) text+100(50) text+150(50)
               INTO message.
-      i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+      add_from_sy( i_message_handler ).
       add_dump_messages( i_dump            = dump
                          i_message_handler = i_message_handler ).
       RETURN.
@@ -154,27 +153,39 @@ CLASS zcl_prc_step_8_isolation IMPLEMENTATION.
     " MESSAGE A/E abort the session without a short dump: the abort text is the original message
     MESSAGE e019(zprc_process_message) WITH text+0(50) text+50(50) text+100(50) text+150(50)
             INTO message.
-    i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+    add_from_sy( i_message_handler ).
 
     IF mo_dump_finder IS NOT BOUND.
       " No dump finder (BTP): whether there is a short dump is unknown, so where to look
       MESSAGE i012(zprc_process_message) WITH cl_abap_context_info=>get_user_technical_name( )
                                               |{ i_started_at TIMESTAMP = ISO }|
               INTO message.
-      i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+      add_from_sy( i_message_handler ).
     ENDIF.
   ENDMETHOD.
 
 
   METHOD add_dump_messages.
     MESSAGE i013(zprc_process_message) WITH i_dump-runtime_error i_dump-program INTO DATA(message) ##NEEDED.
-    i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+    add_from_sy( i_message_handler ).
 
     DATA short_text TYPE c LENGTH 200.
     short_text = i_dump-short_text.
     MESSAGE i014(zprc_process_message) WITH short_text+0(50) short_text+50(50) short_text+100(50) short_text+150(50)
             INTO message.
-    i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
+    add_from_sy( i_message_handler ).
+  ENDMETHOD.
+
+
+  METHOD add_from_sy.
+    CAST zcl_prc_message_handler( i_message_handler )->add_message_without_failing(
+        VALUE #( msgty = sy-msgty
+                 msgid = sy-msgid
+                 msgno = sy-msgno
+                 msgv1 = sy-msgv1
+                 msgv2 = sy-msgv2
+                 msgv3 = sy-msgv3
+                 msgv4 = sy-msgv4 ) ).
   ENDMETHOD.
 
 ENDCLASS.

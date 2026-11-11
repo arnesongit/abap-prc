@@ -6,5 +6,5 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: BSP/ZUIPRCRUN/O2APPLT 00001, maxlen=60
-msgid "Ru"
+msgid "Run"
 msgstr "Lauf"

@@ -44,9 +44,15 @@ INTERFACE zif_prc_transition_handler PUBLIC.
   "! Step header if the transition succeeded.
   "!
   "! Called only after PERFORM_TRANSITION and the save simulation passed, so it
-  "! may refer to results of the run - a document number, an assigned key.
+  "! may refer to results of the run - a document number, an assigned key. The
+  "! message is persisted with the commit of the step, so it is only visible if
+  "! the step succeeded as a whole.
   "!
-  "! @parameter r_message | Success message.
+  "! Type S, I or W; the type is kept. Any other type is a program error: the
+  "! step fails with ZPRC_PROCESS_MESSAGE/023. Initial: the engine uses
+  "! ZPRC_PROCESS_MESSAGE/017 "Step processed successfully".
+  "!
+  "! @parameter r_message | Success message; initial for the default.
   METHODS get_success_message RETURNING VALUE(r_message) TYPE symsg.
 
   "! Step header if the transition failed.

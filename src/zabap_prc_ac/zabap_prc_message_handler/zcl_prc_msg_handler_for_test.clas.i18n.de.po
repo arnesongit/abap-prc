@@ -7,4 +7,4 @@ msgstr ""
 
 #: CLAS/ZCL_PRC_MSG_HANDLER_FOR_TEST/CLASS 00001, maxlen=60
 msgid "Message handler for tests"
-msgstr ""
+msgstr "Message-Handler für Tests"

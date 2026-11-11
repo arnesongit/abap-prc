@@ -7,4 +7,4 @@ msgstr ""
 
 #: CLAS/ZCL_PRC_CLEANUP_JOB/CLASS 00001, maxlen=60
 msgid "Cleanup job (data retention)"
-msgstr ""
+msgstr "Bereinigungsjob (Datenhaltung)"

@@ -18,7 +18,7 @@
      <SPRSL>E</SPRSL>
      <ARBGB>ZPRC_PROCESS_MESSAGE</ARBGB>
      <MSGNR>002</MSGNR>
-     <TEXT>Transition failed without error message</TEXT>
+     <TEXT>Step failed without error message</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
@@ -108,7 +108,7 @@
      <SPRSL>E</SPRSL>
      <ARBGB>ZPRC_PROCESS_MESSAGE</ARBGB>
      <MSGNR>017</MSGNR>
-     <TEXT>Transition from state &amp;1 completed successfully</TEXT>
+     <TEXT>Step processed successfully</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
@@ -133,6 +133,12 @@
      <ARBGB>ZPRC_PROCESS_MESSAGE</ARBGB>
      <MSGNR>021</MSGNR>
      <TEXT>Process class &amp;1 cannot be loaded: &amp;2&amp;3&amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZPRC_PROCESS_MESSAGE</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Program error: success message &amp;1 &amp;2 has type &amp;3 (allowed: S, I, W)</TEXT>
     </T100>
    </T100>
   </asx:values>

@@ -65,6 +65,10 @@ msgstr "Verarbeitungsschritt durch Programmfehler abgebrochen"
 msgid "Processing step aborted: &1&2&3&4"
 msgstr "Verarbeitungsschritt abgebrochen: &1&2&3&4"
 
+#: MESS/ZPRC_PROCESS_MESSAGE023/TEXT, maxlen=73
+msgid "Program error: success message &1 &2 has type &3 (allowed: S, I, W)"
+msgstr "Programmfehler: Erfolgsmeldung &1 &2 hat Typ &3 (erlaubt: S, I, W)"
+
 #: MESS/ZPRC_PROCESS_MESSAGE016/TEXT, maxlen=73
 msgid "Save failed; the business object reported no error"
 msgstr "Sichern fehlgeschlagen; Business-Objekt meldete keinen Fehler"
@@ -82,13 +86,13 @@ msgid "Short dump &1 in program &2 (ST22)"
 msgstr "Kurzdump &1 in Programm &2 (ST22)"
 
 #: MESS/ZPRC_PROCESS_MESSAGE002/TEXT, maxlen=73
-msgid "Transition failed without error message"
-msgstr "Übergang ohne Fehlermeldung fehlgeschlagen"
+msgid "Step failed without error message"
+msgstr "Schritt ohne Fehlermeldung fehlgeschlagen"
+
+#: MESS/ZPRC_PROCESS_MESSAGE017/TEXT, maxlen=73
+msgid "Step processed successfully"
+msgstr "Schritt erfolgreich verarbeitet"
 
 #: MESS/ZPRC_PROCESS_MESSAGE006/TEXT, maxlen=73
 msgid "Transition from &1 to &2 is not defined in process class &3"
 msgstr "Übergang von &1 nach &2 ist in Prozessklasse &3 nicht definiert"
-
-#: MESS/ZPRC_PROCESS_MESSAGE017/TEXT, maxlen=73
-msgid "Transition from state &1 completed successfully"
-msgstr "Übergang aus Zustand &1 erfolgreich abgeschlossen"

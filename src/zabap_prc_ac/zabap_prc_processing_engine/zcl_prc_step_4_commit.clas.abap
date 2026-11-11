@@ -75,11 +75,8 @@ CLASS zcl_prc_step_4_commit IMPLEMENTATION.
     ENDIF.
 
     DATA(written) = lines( i_message_handler->get_messages( ) ).
-    TRY.
-        i_message_handler->add_eml_modify_result( i_reported = i_reported ).
-      CATCH zcx_prc_unit_of_work_failed ##NO_HANDLER.
-        " Cannot happen without FAILED - and the step is committed already
-    ENDTRY.
+    " The step is committed already: late messages - also errors - are recorded, never a failure
+    CAST zcl_prc_message_handler( i_message_handler )->add_reported_without_failing( i_reported ).
 
     " Only the messages added now; the others were written with the step
     DATA(messages) = i_message_handler->get_messages( ).

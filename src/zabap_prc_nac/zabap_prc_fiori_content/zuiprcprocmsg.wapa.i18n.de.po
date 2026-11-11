@@ -6,5 +6,5 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: BSP/ZUIPRCPROCMSG/O2APPLT 00001, maxlen=60
-msgid "Deployed with SAP Fiori tools"
+msgid "Processed Message"
 msgstr "Deployed mit SAP Fiori Tools"

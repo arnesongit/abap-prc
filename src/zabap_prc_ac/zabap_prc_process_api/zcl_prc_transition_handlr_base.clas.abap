@@ -7,7 +7,8 @@
 "!
 "! <h2>Minimal transition</h2>
 "! Redefine PERFORM_TRANSITION only. The step header is then
-"! ZPRC_PROCESS_MESSAGE/017 on success and the last error message on failure.
+"! ZPRC_PROCESS_MESSAGE/017 "Step processed successfully" on success and the
+"! last error message on failure - both chosen by the engine.
 "!
 "! <h2>Own messages</h2>
 "! Redefine GET_SUCCESS_MESSAGE to report a business result, and
@@ -91,12 +92,16 @@ CLASS zcl_prc_transition_handlr_base DEFINITION PUBLIC ABSTRACT CREATE PUBLIC.
     "! it may refer to results produced during the run - a document number, an
     "! assigned key.
     "!
-    "! Optional: by default ZPRC_PROCESS_MESSAGE/017 "Transition from state &1
-    "! completed successfully" with the start state.
+    "! Type S, I or W; the type is kept. Any other type is a program error and
+    "! fails the step with ZPRC_PROCESS_MESSAGE/023.
+    "!
+    "! Optional: by default none, the engine then uses ZPRC_PROCESS_MESSAGE/017
+    "! "Step processed successfully" - start and end state are shown with the
+    "! step anyway.
     "!
     "! @parameter i_processed_object_ext_id   | External ID of the processed object, e.g. 70000678 for an equipment.
     "! @parameter i_processed_object_ext_uuid | External UUID of the processed object.
-    "! @parameter r_message                   | Success message.
+    "! @parameter r_message                   | Success message; initial for the default.
     METHODS get_success_message IMPORTING i_processed_object_ext_id   TYPE ZR_PRC_ProcessedObject-ExternalProcessedObjectID
                                           i_processed_object_ext_uuid TYPE ZR_PRC_ProcessedObject-ExternalProcessedObjectUUID
                                 RETURNING VALUE(r_message)            TYPE symsg.
@@ -127,8 +132,6 @@ CLASS zcl_prc_transition_handlr_base DEFINITION PUBLIC ABSTRACT CREATE PUBLIC.
     DATA m_processed_object_ext_id   TYPE ZR_PRC_ProcessedObject-ExternalProcessedObjectID.
     DATA m_processed_object_ext_uuid TYPE ZR_PRC_ProcessedObject-ExternalProcessedObjectUUID.
     DATA m_process_name              TYPE zprc_process_name.
-    "! Start state of the running transition, for the default success message
-    DATA m_start_state               TYPE zif_prc_process=>ty_state.
 ENDCLASS.
 
 
@@ -138,9 +141,7 @@ CLASS zcl_prc_transition_handlr_base IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_success_message.
-    " by default the generic PRC message with the start state
-    MESSAGE s017(zprc_process_message) WITH m_start_state INTO DATA(lv_dummy) ##NEEDED.
-    r_message = sy_message( ).
+    " by default none: the engine then uses ZPRC_PROCESS_MESSAGE/017
   ENDMETHOD.
 
   METHOD sy_message.
@@ -174,7 +175,6 @@ CLASS zcl_prc_transition_handlr_base IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD zif_prc_transition_handler~perform_transition.
-    m_start_state = i_start_state.
     r_new_state = perform_transition( EXPORTING i_start_state               = i_start_state
                                                 i_processed_object_ext_id   = m_processed_object_ext_id
                                                 i_processed_object_ext_uuid = m_processed_object_ext_uuid

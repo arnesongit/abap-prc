@@ -1,10 +1,10 @@
 "! <p class="shorttext synchronized">ABAP-PRC: Step layer 5 - expected errors</p>
 "!
 "! Catches business errors - from the transition, the simulation or the commit,
-"! all signalled by ZCX_PRC_UNIT_OF_WORK_FAILED. Rolls back, adds the failure
-"! message of the transition as the last error - which makes it the step
-"! header - and writes the failed step with all messages of the handler and the
-"! next retry data in a new LUW.
+"! all signalled by ZCX_PRC_UNIT_OF_WORK_FAILED. Rolls back, chooses the step
+"! header with ZCL_PRC_STEP_HEADER=>FOR_FAILURE - the failure message of the
+"! transition, else the last error - and writes the failed step with all
+"! messages of the handler and the next retry data in a new LUW.
 CLASS zcl_prc_step_5_expected DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -17,10 +17,6 @@ CLASS zcl_prc_step_5_expected DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PRIVATE SECTION.
     DATA mo_inner       TYPE REF TO zif_prc_processing_step.
     DATA mo_step_writer TYPE REF TO zcl_prc_step_writer.
-
-    "! Adds the failure message of the transition, if it declares one.
-    METHODS add_failure_message IMPORTING i_transition      TYPE REF TO zif_prc_transition_handler
-                                          i_message_handler TYPE REF TO zif_prc_message_handler.
 ENDCLASS.
 
 
@@ -46,13 +42,16 @@ CLASS zcl_prc_step_5_expected IMPLEMENTATION.
         ROLLBACK ENTITIES.
         ROLLBACK WORK.
 
-        add_failure_message( i_transition      = e_transition
-                             i_message_handler = i_message_handler ).
+        " The transition is unbound if it could not be instantiated
+        DATA(header) = zcl_prc_step_header=>for_failure(
+                           i_message_handler = i_message_handler
+                           i_failure_message = COND #( WHEN e_transition IS BOUND
+                                                       THEN e_transition->get_failure_message( ) ) ).
 
         " The state before the step, only the retry data change
         r_state = mo_step_writer->write( i_start_state     = i_state-State
                                          i_state           = mo_step_writer->with_next_retry( i_state )
-                                         i_header          = i_message_handler->get_header( )
+                                         i_header          = header
                                          i_message_handler = i_message_handler ).
         " The RAP buffer is empty after the rollback, so COMMIT ENTITIES alone
         " would not commit the step written by SQL
@@ -61,27 +60,4 @@ CLASS zcl_prc_step_5_expected IMPLEMENTATION.
     ENDTRY.
   ENDMETHOD.
 
-
-  METHOD add_failure_message.
-    " The transition is unbound if it could not be instantiated
-    IF i_transition IS NOT BOUND.
-      RETURN.
-    ENDIF.
-    DATA(failure) = i_transition->get_failure_message( ).
-    IF failure IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    " As the last error of the step it becomes the header (last of the highest severity)
-    MESSAGE ID failure-msgid TYPE 'E' NUMBER failure-msgno
-            WITH failure-msgv1 failure-msgv2 failure-msgv3 failure-msgv4
-            INTO DATA(message) ##NEEDED.
-    TRY.
-        i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
-      CATCH zcx_prc_unit_of_work_failed ##NO_HANDLER.
-        " Cannot happen with i_fail_on_error_message = abap_false
-    ENDTRY.
-  ENDMETHOD.
-
 ENDCLASS.
-

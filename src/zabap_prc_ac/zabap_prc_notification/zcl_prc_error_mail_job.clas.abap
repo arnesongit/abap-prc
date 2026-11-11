@@ -57,8 +57,8 @@ CLASS zcl_prc_error_mail_job IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    zcl_prc_processing_api=>get_instance( )->create_processed_objects(
-        i_create_processed_objects = VALUE #(
+    zcl_prc_processing_api=>get_instance( )->create_and_process(
+        VALUE #(
             FOR g IN lt_groups
             ( processName         = zcl_prc_notif_error_proc=>co_process_name
               factoryClassName    = zcl_prc_notif_error_proc=>co_class_name
@@ -67,9 +67,7 @@ CLASS zcl_prc_error_mail_job IMPLEMENTATION.
               processedObjectUUID = xco_cp=>uuid( )->value
               payloadJson         = zcl_prc_notification=>payload_to_json(
                                         VALUE #( process_name = g-process_name
-                                                 mail_address = condense( g-mail_address ) ) ) ) )
-        i_perform_commit           = abap_true
-        i_trigger_processing       = zcl_prc_processing_api=>execution_mode-direct_execution ).
+                                                 mail_address = condense( g-mail_address ) ) ) ) ) ).
   ENDMETHOD.
 
   METHOD _get_groups.

@@ -1,9 +1,19 @@
+"! <p class="shorttext synchronized">Starts a run from a host application</p>
+"!
+"! Entry for host applications (e.g. an action of a RAP BO) that start a run: it
+"! calls the action initiateRun of the run BO with the selection of the user and
+"! the job template of the run job.
+"!
+"! No COMMIT: the run is saved and its job is scheduled with the commit of the
+"! caller's LUW. A rejected run (unknown template or parameter, no authorization)
+"! is not created; the reasons are returned to be passed on as REPORTED.
 CLASS zcl_prc_run_initiator DEFINITION
   PUBLIC
   FINAL
   CREATE PRIVATE .
 
   PUBLIC SECTION.
+    "! The instance to use
     CLASS-METHODS get_instance RETURNING VALUE(ro_instance) TYPE REF TO zcl_prc_run_initiator.
 
     TYPES: BEGIN OF ty_parameter_table,
@@ -16,6 +26,11 @@ CLASS zcl_prc_run_initiator DEFINITION
 
     "! Creates a run and schedules its job (action initiateRun of the run BO).
     "!
+    "! @parameter iv_selection_option_json | Selection of the user as JSON (select options of the job)
+    "! @parameter it_parameter_table       | Further parameters of the job (name, value)
+    "! @parameter iv_application_name      | Application of the run (authorization ZPRC_RUN)
+    "! @parameter iv_job_name              | Name of the job, shown in the Runs app
+    "! @parameter iv_job_template_name     | Job template of the run job
     "! @parameter rv_run_uuid | The new run; initial if the run was rejected
     "! @parameter et_messages | Reasons of a rejection (e.g. ZPRC_RUN/001 unknown parameter,
     "!                          ZPRC_RUN/010 unknown template), to pass on as REPORTED
@@ -87,3 +102,4 @@ CLASS zcl_prc_run_initiator IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.
+

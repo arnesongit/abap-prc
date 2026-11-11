@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_PRC_RUN_INITIATOR</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Run initiator</DESCRIPT>
+    <DESCRIPT>Starts a run from a host application</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -6,5 +6,5 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: CLAS/ZCL_PRC_RUN_INITIATOR/CLASS 00001, maxlen=60
-msgid "Run initiator"
+msgid "Starts a run from a host application"
 msgstr "Lauf-Initiator"

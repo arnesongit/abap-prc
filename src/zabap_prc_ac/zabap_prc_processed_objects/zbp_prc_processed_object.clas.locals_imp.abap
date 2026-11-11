@@ -190,7 +190,8 @@ CLASS lhc_ProcessedObject IMPLEMENTATION.
 ENDCLASS.
 
 
-CLASS lsc_ProcessedObject DEFINITION INHERITING FROM cl_abap_behavior_saver.
+"! Saver with FAILED/REPORTED in save_modified: a resume that cannot be scheduled fails the save
+CLASS lsc_ProcessedObject DEFINITION INHERITING FROM cl_abap_behavior_saver_failed.
   PROTECTED SECTION.
     METHODS save_modified REDEFINITION.
 ENDCLASS.
@@ -205,9 +206,22 @@ CLASS lsc_ProcessedObject IMPLEMENTATION.
                                         i_delete = delete ).
 
     IF lhc_processedobject=>gt_processed_objects IS NOT INITIAL.
-      zcl_prc_processing_api=>get_instance( )->process_asynchronously_bgpf(
-          VALUE #( FOR k IN lhc_processedobject=>gt_processed_objects
-                   ( selname = zcl_prc_retry_job=>s_uuid sign = 'I' option = 'EQ' low = k ) ) ).
+      TRY.
+          zcl_prc_processing_api=>get_instance( )->process_asynchronously_bgpf(
+              VALUE #( FOR k IN lhc_processedobject=>gt_processed_objects
+                       ( selname = zcl_prc_retry_job=>s_uuid sign = 'I' option = 'EQ' low = k ) ) ).
+        CATCH cx_bgmc INTO FINAL(lx_bgmc).
+          " Resume asked for processing now - if it cannot be scheduled, the save fails
+          " and the caller sees why, instead of an object silently waiting for the retry job
+          LOOP AT lhc_processedobject=>gt_processed_objects INTO FINAL(lv_uuid).
+            APPEND VALUE #( UUID        = lv_uuid
+                            %fail-cause = if_abap_behv=>cause-unspecific ) TO failed-processedobject.
+            APPEND VALUE #( UUID = lv_uuid
+                            %msg = new_message_with_text( severity = if_abap_behv_message=>severity-error
+                                                          text     = lx_bgmc->get_text( ) ) )
+                   TO reported-processedobject.
+          ENDLOOP.
+      ENDTRY.
     ENDIF.
     " Triggered once per save
     CLEAR lhc_processedobject=>gt_processed_objects.

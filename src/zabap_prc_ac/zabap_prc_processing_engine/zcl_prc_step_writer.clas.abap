@@ -4,8 +4,11 @@
 "! errors, isolation. Not a layer itself. Writes the step with its header, all
 "! messages of the handler and the object through the DB writer. Never commits.
 "!
-"! The header is always one of the messages of the handler; that message is
-"! marked as header (IsHeader), all others are additional messages.
+"! The header is chosen by the layer that writes the step. If it is one of the
+"! messages of the handler (failure: the last error), that message is marked
+"! as header (IsHeader). Otherwise (success: the success message, which is not
+"! in the handler) it is added as a message of its own and marked. All other
+"! messages are additional messages.
 CLASS zcl_prc_step_writer DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -45,7 +48,8 @@ CLASS zcl_prc_step_writer DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PRIVATE SECTION.
     DATA mo_db_writer TYPE REF TO zif_prc_db_writer.
 
-    "! @parameter i_header | Header of the step; the last message equal to it is marked. Initial: none.
+    "! @parameter i_header | Header of the step; the last message equal to it is marked,
+    "!                       otherwise it is added. Initial: none.
     METHODS to_processed_messages IMPORTING i_state           TYPE zif_prc_processing_engine=>ty_state
                                             i_messages        TYPE zif_prc_message_handler=>tt_messages
                                             i_header          TYPE zif_prc_message_handler=>ty_message_details OPTIONAL
@@ -110,8 +114,7 @@ CLASS zcl_prc_step_writer IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " The handler takes the last message of the highest severity as header:
-    " mark the last message equal to it
+    " Failure: the header is the last error of the handler - mark the last message equal to it
     DATA(index) = lines( i_messages ).
     WHILE index > 0.
       IF i_messages[ index ] = i_header.
@@ -121,7 +124,8 @@ CLASS zcl_prc_step_writer IMPLEMENTATION.
       index -= 1.
     ENDWHILE.
 
-    " Safety net: the header is the only place the step header is kept - never lose it
+    " Success: the success message is not in the handler - it becomes a message of its own,
+    " persisted with the commit of the step only
     INSERT VALUE #( UUID                = xco_cp=>uuid( )->value
                     ProcessedStepUUID   = i_state-LatestStepUUID
                     ProcessedObjectUUID = i_state-UUID

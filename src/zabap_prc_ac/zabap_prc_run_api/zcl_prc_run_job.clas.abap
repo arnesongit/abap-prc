@@ -155,19 +155,17 @@ CLASS zcl_prc_run_job IMPLEMENTATION.
     _set_total_number( lines( i_objects ) ).
 
     DATA(process) = get_process( ).
-    zcl_prc_processing_api=>get_instance( )->create_processed_objects(
-        i_create_processed_objects = VALUE #( FOR o IN i_objects
-                                              ( processedObject     = o-id
-                                                processedObjectUUID = o-uuid
-                                                payloadJson         = o-payload_json
-                                                queueID             = o-queue_id
-                                                queuePosition       = o-queue_position
-                                                doNotProcessBefore  = o-do_not_process_before
-                                                runUUID             = mv_current_run_uuid
-                                                processName         = process-name
-                                                factoryClassName    = process-factory_class ) )
-        i_perform_commit           = abap_true
-        i_trigger_processing       = zcl_prc_processing_api=>execution_mode-direct_execution ).
+    zcl_prc_processing_api=>get_instance( )->create_and_process(
+        VALUE #( FOR o IN i_objects
+                 ( processedObject     = o-id
+                   processedObjectUUID = o-uuid
+                   payloadJson         = o-payload_json
+                   queueID             = o-queue_id
+                   queuePosition       = o-queue_position
+                   doNotProcessBefore  = o-do_not_process_before
+                   runUUID             = mv_current_run_uuid
+                   processName         = process-name
+                   factoryClassName    = process-factory_class ) ) ).
   ENDMETHOD.
 
 
@@ -362,13 +360,10 @@ CLASS zcl_prc_run_job IMPLEMENTATION.
       WHERE UUID = @mv_current_run_uuid
       INTO @DATA(ls_run).
 
-    zcl_prc_processing_api=>get_instance( )->create_processed_objects(
-        i_create_processed_objects = zcl_prc_notif_run_proc=>create_notification(
-                                         i_run_uuid         = mv_current_run_uuid
-                                         i_application_name = ls_run-ApplicationName
-                                         i_job_start        = ls_run-JobStart )
-        i_perform_commit           = abap_true
-        i_trigger_processing       = zcl_prc_processing_api=>execution_mode-direct_execution ).
+    zcl_prc_processing_api=>get_instance( )->create_and_process(
+        zcl_prc_notif_run_proc=>create_notification( i_run_uuid         = mv_current_run_uuid
+                                                     i_application_name = ls_run-ApplicationName
+                                                     i_job_start        = ls_run-JobStart ) ).
   ENDMETHOD.
 
 

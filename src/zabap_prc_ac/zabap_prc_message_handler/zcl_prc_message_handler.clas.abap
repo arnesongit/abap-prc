@@ -1,26 +1,36 @@
 "! <p class="shorttext synchronized">Standard implementation of ZIF_PRC_MESSAGE_HANDLER</p>
 "!
 "! One instance per step, created by the processing engine and handed to the
-"! transition. The rules (failure, severities, header) are documented at
-"! ZIF_PRC_MESSAGE_HANDLER.
+"! transition. The rules (failure, severities) are documented at
+"! ZIF_PRC_MESSAGE_HANDLER. The step header is not a concept of the handler:
+"! the engine chooses it (ZCL_PRC_STEP_HEADER).
 "!
 "! Only the engine creates handlers (global friends). A transition always
 "! works with the handler it is given; tests use ZCL_PRC_MSG_HANDLER_FOR_TEST.
 "!
+"! <h2>Engine only: adding without failing</h2>
+"! Through the public interface every error fails the step. The engine itself
+"! has to record errors without failing - the failure message after the
+"! failure, the abort of a step session, an unexpected exception, messages
+"! that arrive after the commit. The ADD_..._WITHOUT_FAILING methods are
+"! private and reserved to the friends of the engine.
+"!
 "! Every message entering the handler passes TO_STORED_MESSAGE: severity
-"! normalized, text resolved. Messages are kept in order of arrival; the
-"! header is updated with every message.
+"! normalized, text resolved. Messages are kept in order of arrival.
 CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE
   GLOBAL FRIENDS zcl_prc_object_step_loop
                  zcl_prc_step_8_isolation_task
                  zcl_prc_step_log
-                 zcl_prc_msg_handler_for_test.
+                 zcl_prc_msg_handler_for_test
+                 zcl_prc_step_header
+                 zcl_prc_step_4_commit
+                 zcl_prc_step_6_unexpected
+                 zcl_prc_step_8_isolation.
 
   PUBLIC SECTION.
     INTERFACES zif_prc_message_handler.
 
   PRIVATE SECTION.
-    DATA ms_header   TYPE zif_prc_message_handler=>ty_message_details.
     DATA mt_messages TYPE zif_prc_message_handler=>tt_messages.
     DATA mv_failed   TYPE abap_bool.
 
@@ -29,14 +39,31 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE
     "! @parameter r_message_handler | New handler.
     CLASS-METHODS create_message_handler RETURNING VALUE(r_message_handler) TYPE REF TO zif_prc_message_handler.
 
+    "! Engine only: adds one message, also an error, without failing the step.
+    "!
+    "! @parameter i_message | Message as delivered by the caller.
+    METHODS add_message_without_failing IMPORTING i_message TYPE symsg.
+
+    "! Engine only: adds an exception with its PREVIOUS chain, also an error,
+    "! without failing the step.
+    "!
+    "! @parameter i_exception | Exception to be recorded.
+    METHODS add_exception_without_failing IMPORTING i_exception TYPE REF TO cx_root.
+
+    "! Engine only: adds the messages of an EML REPORTED response, also errors,
+    "! without failing the step - e.g. messages that arrive after the commit.
+    "!
+    "! @parameter i_reported | REPORTED response.
+    METHODS add_reported_without_failing IMPORTING i_reported TYPE any.
+
     "! Marks the step as failed and raises.
     "! Without any error message, ZPRC_PROCESS_MESSAGE/002 is added first, so a
-    "! failed step never ends with an S/W/I header.
+    "! failed step always has an error.
     "!
     "! @raising zcx_prc_unit_of_work_failed | Always.
     METHODS fail RAISING zcx_prc_unit_of_work_failed.
 
-    "! Stores one message and updates the header.
+    "! Stores one message.
     "!
     "! @parameter i_message | Message as delivered by the caller.
     METHODS append_message IMPORTING i_message TYPE symsg.
@@ -53,6 +80,14 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE
     "! @parameter r_message | Message as stored.
     METHODS to_stored_message IMPORTING i_message        TYPE symsg
                               RETURNING VALUE(r_message) TYPE zif_prc_message_handler=>ty_message_details.
+
+    "! The exception and its PREVIOUS chain as messages: the innermost cause
+    "! first, the exception itself last.
+    "!
+    "! @parameter i_exception | Exception.
+    "! @parameter r_messages  | Messages, severity not yet normalized.
+    METHODS exception_chain_to_messages IMPORTING i_exception       TYPE REF TO cx_root
+                                        RETURNING VALUE(r_messages) TYPE zcl_prc_message_mapper=>tt_messages.
 
     "! One exception as message: its T100 key if it has one, else its text as
     "! SY 499; severity from IF_T100_DYN_MSG / IF_ABAP_BEHV_MESSAGE, else E.
@@ -76,24 +111,12 @@ CLASS zcl_prc_message_handler DEFINITION PUBLIC FINAL CREATE PRIVATE
     "! @parameter r_msgty | W, I, S or E.
     METHODS normalize_severity IMPORTING i_msgty        TYPE symsgty
                                RETURNING VALUE(r_msgty) TYPE symsgty.
-
-    "! Rank of a normalized severity for the header: E 4, S 3, W 2, I 1.
-    "!
-    "! @parameter i_msgty | Normalized severity (E, S, W, I).
-    "! @parameter r_rank  | Rank; 0 for an initial severity.
-    METHODS severity_rank IMPORTING i_msgty       TYPE symsgty
-                          RETURNING VALUE(r_rank) TYPE i.
 ENDCLASS.
 
 
 CLASS zcl_prc_message_handler IMPLEMENTATION.
   METHOD append_message.
-    APPEND to_stored_message( i_message ) TO mt_messages ASSIGNING FIELD-SYMBOL(<fs>).
-
-    " Header: last message of the highest severity
-    IF severity_rank( <fs>-msgty ) >= severity_rank( ms_header-msgty ).
-      ms_header = <fs>.
-    ENDIF.
+    APPEND to_stored_message( i_message ) TO mt_messages.
   ENDMETHOD.
 
   METHOD append_messages.
@@ -114,6 +137,19 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
                  r_message-msgv3
                  r_message-msgv4
             INTO r_message-message_text.
+  ENDMETHOD.
+
+  METHOD exception_chain_to_messages.
+    DATA lt_chain TYPE STANDARD TABLE OF REF TO cx_root WITH EMPTY KEY.
+    DATA(lo_exception) = i_exception.
+    WHILE lo_exception IS BOUND.
+      INSERT lo_exception INTO lt_chain INDEX 1.
+      lo_exception = lo_exception->previous.
+    ENDWHILE.
+
+    LOOP AT lt_chain INTO lo_exception.
+      APPEND CORRESPONDING #( exception_to_message( lo_exception ) ) TO r_messages.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD exception_to_message.
@@ -175,8 +211,20 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     r_message_handler = NEW zcl_prc_message_handler( ).
   ENDMETHOD.
 
+  METHOD add_message_without_failing.
+    append_message( i_message ).
+  ENDMETHOD.
+
+  METHOD add_exception_without_failing.
+    append_messages( exception_chain_to_messages( i_exception ) ).
+  ENDMETHOD.
+
+  METHOD add_reported_without_failing.
+    append_messages( zcl_prc_message_mapper=>from_reported( i_reported ) ).
+  ENDMETHOD.
+
   METHOD fail.
-    " A failed unit of work never ends with an S/W/I header
+    " A failed unit of work always has an error
     IF NOT line_exists( mt_messages[ msgty = 'E' ] ).
       MESSAGE e002(zprc_process_message) INTO DATA(lv_dummy) ##NEEDED.
       append_message( CORRESPONDING #( sy ) ).
@@ -192,21 +240,12 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
                       ELSE 'E' ).
   ENDMETHOD.
 
-  METHOD severity_rank.
-    r_rank = SWITCH #( i_msgty
-                       WHEN 'E' THEN 4
-                       WHEN 'S' THEN 3
-                       WHEN 'W' THEN 2
-                       WHEN 'I' THEN 1
-                       ELSE 0 ).
-  ENDMETHOD.
-
   METHOD zif_prc_message_handler~add_bapi_result.
     r_message_handler = me.
 
     DATA(lt_msg) = zcl_prc_message_mapper=>from_bapiret( i_bapiret ).
     append_messages( lt_msg ).
-    IF i_fail_on_error_message = abap_true AND contains_error( lt_msg ).
+    IF contains_error( lt_msg ).
       fail( ).
     ENDIF.
   ENDMETHOD.
@@ -217,7 +256,7 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     IF i_reported IS SUPPLIED.
       DATA(lt_msg) = zcl_prc_message_mapper=>from_reported( i_reported ).
       append_messages( lt_msg ).
-      IF i_fail_on_error_message = abap_true AND contains_error( lt_msg ).
+      IF contains_error( lt_msg ).
         fail( ).
       ENDIF.
     ENDIF.
@@ -230,21 +269,9 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
   METHOD zif_prc_message_handler~add_exception.
     r_message_handler = me.
 
-    " Innermost cause first, the exception itself last
-    DATA lt_chain TYPE STANDARD TABLE OF REF TO cx_root WITH EMPTY KEY.
-    DATA(lo_exception) = i_exception.
-    WHILE lo_exception IS BOUND.
-      INSERT lo_exception INTO lt_chain INDEX 1.
-      lo_exception = lo_exception->previous.
-    ENDWHILE.
-
-    DATA lt_msg TYPE zcl_prc_message_mapper=>tt_messages.
-    LOOP AT lt_chain INTO lo_exception.
-      APPEND CORRESPONDING #( exception_to_message( lo_exception ) ) TO lt_msg.
-    ENDLOOP.
-
+    DATA(lt_msg) = exception_chain_to_messages( i_exception ).
     append_messages( lt_msg ).
-    IF i_fail_on_error_message = abap_true AND contains_error( lt_msg ).
+    IF contains_error( lt_msg ).
       fail( ).
     ENDIF.
   ENDMETHOD.
@@ -254,7 +281,7 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
 
     DATA(ls_msg) = CORRESPONDING symsg( sy ).
     append_message( ls_msg ).
-    IF i_fail_on_error_message = abap_true AND normalize_severity( ls_msg-msgty ) = 'E'.
+    IF normalize_severity( ls_msg-msgty ) = 'E'.
       fail( ).
     ENDIF.
   ENDMETHOD.
@@ -265,13 +292,9 @@ CLASS zcl_prc_message_handler IMPLEMENTATION.
     DATA(ls_msg) = zcl_prc_message_mapper=>from_text( text  = i_message_text
                                                       msgty = i_message_severity ).
     append_message( ls_msg ).
-    IF i_fail_on_error_message = abap_true AND normalize_severity( ls_msg-msgty ) = 'E'.
+    IF normalize_severity( ls_msg-msgty ) = 'E'.
       fail( ).
     ENDIF.
-  ENDMETHOD.
-
-  METHOD zif_prc_message_handler~get_header.
-    r_message = ms_header.
   ENDMETHOD.
 
   METHOD zif_prc_message_handler~get_messages.

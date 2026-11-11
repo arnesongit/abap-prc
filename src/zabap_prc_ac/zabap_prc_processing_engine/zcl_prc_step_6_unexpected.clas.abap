@@ -41,25 +41,18 @@ CLASS zcl_prc_step_6_unexpected IMPLEMENTATION.
         ROLLBACK ENTITIES.
         ROLLBACK WORK.
 
-        TRY.
-            " Recorded without failing the handler: the failure is decided here.
-            " Keeps the T100 key and the PREVIOUS chain of the exception.
-            i_message_handler->add_exception( i_exception             = error
-                                              i_fail_on_error_message = abap_false ).
-            " A failed step never gets an S/W/I header - also not from an exception
-            " that carries a weaker severity (IF_T100_DYN_MSG / IF_ABAP_BEHV_MESSAGE)
-            IF i_message_handler->get_header( )-msgty <> 'E'.
-              MESSAGE e002(zprc_process_message) INTO DATA(message) ##NEEDED.
-              i_message_handler->add_message_from_sy( i_fail_on_error_message = abap_false ).
-            ENDIF.
-          CATCH zcx_prc_unit_of_work_failed ##NO_HANDLER.
-            " Not raised with I_FAIL_ON_ERROR_MESSAGE = abap_false; required by the signature
-        ENDTRY.
+        " Recorded without failing the handler: the failure is decided here.
+        " Keeps the T100 key and the PREVIOUS chain of the exception.
+        CAST zcl_prc_message_handler( i_message_handler )->add_exception_without_failing( error ).
+
+        " Header: the last error - also if the exception carries a weaker severity
+        " (IF_T100_DYN_MSG / IF_ABAP_BEHV_MESSAGE), then ZPRC_PROCESS_MESSAGE/002
+        DATA(header) = zcl_prc_step_header=>for_failure( i_message_handler ).
 
         " The state before the step, only the retry data change
         r_state = mo_step_writer->write( i_start_state     = i_state-State
                                          i_state           = mo_step_writer->with_next_retry( i_state )
-                                         i_header          = i_message_handler->get_header( )
+                                         i_header          = header
                                          i_message_handler = i_message_handler ).
         " The RAP buffer is empty after the rollback, so COMMIT ENTITIES alone
         " would not commit the step written by SQL

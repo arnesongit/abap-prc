@@ -1,11 +1,15 @@
 "! <p class="shorttext synchronized">Processing API</p>
 "!
 "! Creates processed objects and triggers their processing - synchronously, via
-"! bgPF or via an application job.
-"!
-"! Triggering asynchronously is best effort: if scheduling fails, the created
-"! objects stay in their start state and the retry job processes them. The
-"! caller cannot do anything better, so no exception is raised.
+"! bgPF or via an application job. One method per use case:
+"! <ul>
+"! <li>CREATE - only create; the caller commits, the retry job processes them</li>
+"! <li>CREATE_AND_PROCESS - create, commit and process in this session</li>
+"! <li>CREATE_AND_SCHEDULE_BGPF / _JOB - create and schedule; the commit of the
+"! caller's LUW starts the processing (e.g. from the save phase of a RAP BO)</li>
+"! </ul>
+"! If scheduling fails, the original exception of the framework is raised: the
+"! caller asked for it explicitly, so a failure must not go unnoticed.
 CLASS zcl_prc_processing_api DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
@@ -28,19 +32,56 @@ CLASS zcl_prc_processing_api DEFINITION
     "! @parameter it_parameters | UUIDs, process names, ignore retry scheduling.
     METHODS process_synchronously       IMPORTING it_parameters TYPE zif_prc_processing_engine=>tt_parameters OPTIONAL.
 
-    "! Schedules the processing via bgPF. If scheduling fails, nothing happens:
-    "! the objects stay due and the retry job processes them.
+    "! Schedules the processing via bgPF. No COMMIT: the commit of the caller's LUW
+    "! starts it.
     "!
     "! @parameter it_parameters | UUIDs, process names, ignore retry scheduling.
-    METHODS process_asynchronously_bgpf IMPORTING it_parameters TYPE zif_prc_processing_engine=>tt_parameters OPTIONAL.
+    "! @raising   cx_bgmc       | bgPF could not be scheduled.
+    METHODS process_asynchronously_bgpf IMPORTING it_parameters TYPE zif_prc_processing_engine=>tt_parameters OPTIONAL
+                                        RAISING   cx_bgmc.
 
-    "! Schedules the processing as application job. If scheduling fails, nothing
-    "! happens: the objects stay due and the retry job processes them.
+    "! Schedules the processing as application job. No COMMIT: the job becomes
+    "! visible with the commit of the caller's LUW.
     "!
     "! @parameter it_parameters | UUIDs, process names, ignore retry scheduling.
-    METHODS process_asynchronously_job  IMPORTING it_parameters TYPE zif_prc_processing_engine=>tt_parameters OPTIONAL.
+    "! @raising   cx_apj_rt     | The job could not be scheduled.
+    METHODS process_asynchronously_job  IMPORTING it_parameters TYPE zif_prc_processing_engine=>tt_parameters OPTIONAL
+                                        RAISING   cx_apj_rt.
 
+    "! Creates processed objects in their start state, without processing them.
+    "! No COMMIT: the caller's LUW saves them; the retry job processes them.
+    "!
+    "! @parameter i_objects | Objects to create.
+    METHODS create IMPORTING i_objects TYPE tt_create_processed_objects.
+
+    "! Creates processed objects, commits and processes them in this session.
+    "! Processing needs the committed objects (every step runs in its own session),
+    "! so this method commits - do not call it inside a foreign LUW (e.g. a RAP save).
+    "!
+    "! @parameter i_objects | Objects to create.
+    METHODS create_and_process IMPORTING i_objects TYPE tt_create_processed_objects.
+
+    "! Creates processed objects and schedules their processing via bgPF. No COMMIT:
+    "! the commit of the caller's LUW saves the objects and starts bgPF.
+    "!
+    "! @parameter i_objects | Objects to create.
+    "! @raising   cx_bgmc   | bgPF could not be scheduled; the objects are written, not committed.
+    METHODS create_and_schedule_bgpf IMPORTING i_objects TYPE tt_create_processed_objects
+                                     RAISING   cx_bgmc.
+
+    "! Creates processed objects and schedules their processing as application job.
+    "! No COMMIT: the commit of the caller's LUW saves the objects and releases the job.
+    "!
+    "! @parameter i_objects | Objects to create.
+    "! @raising   cx_apj_rt | The job could not be scheduled; the objects are written, not committed.
+    METHODS create_and_schedule_job IMPORTING i_objects TYPE tt_create_processed_objects
+                                    RAISING   cx_apj_rt.
+
+    "! Deprecated - use CREATE, CREATE_AND_PROCESS, CREATE_AND_SCHEDULE_BGPF or
+    "! CREATE_AND_SCHEDULE_JOB. Will be removed in a later release.
+    "! <br/>
     "! Creates processed objects in their start state and triggers their processing.
+    "! Scheduling errors are ignored: the objects stay due for the retry job.
     "!
     "! @parameter i_create_processed_objects | Objects to create.
     "! @parameter i_perform_commit           | COMMIT WORK after creating.
@@ -50,22 +91,17 @@ CLASS zcl_prc_processing_api DEFINITION
                                                i_trigger_processing       TYPE ty_execution_mode DEFAULT ''.
   PRIVATE SECTION.
     CLASS-DATA g_instance TYPE REF TO zcl_prc_processing_api.
+
+    "! Writes the objects (no commit) and returns the selection of exactly these objects
+    METHODS write IMPORTING i_objects           TYPE tt_create_processed_objects
+                  RETURNING VALUE(r_parameters) TYPE zif_prc_processing_engine=>tt_parameters.
 ENDCLASS.
 
 
 CLASS zcl_prc_processing_api IMPLEMENTATION.
 
   METHOD process_asynchronously_bgpf.
-    TRY.
-        cl_bgmc_process_factory=>get_default(
-            )->create(
-            )->set_name( |ABAP Processing Center - asynchronous bgPF execution|
-            )->set_operation_tx_uncontrolled( NEW zcl_prc_bgpf( it_parameters )
-            )->save_for_execution( ).
-      CATCH cx_bgmc ##NO_HANDLER.
-        " Best effort: the objects stay due, the retry job processes them.
-        " TODO: entry in the application log (logging BAdI)
-    ENDTRY.
+    zcl_prc_bgpf_scheduler=>get( )->schedule( it_parameters ).
   ENDMETHOD.
 
   METHOD process_asynchronously_job.
@@ -82,14 +118,9 @@ CLASS zcl_prc_processing_api IMPLEMENTATION.
                       high   = ls_parameter-high ) TO <fs_job_parameter>-t_value.
     ENDLOOP.
 
-    TRY.
-        zcl_prc_job_scheduler=>get( )->schedule_immediately( i_template_name = zcl_prc_retry_job=>c_apj_template_name
-                                                             i_job_text      = |ABAP-PRC: Trigger processing asynch via APJ|
-                                                             i_parameters    = lt_job_parameter ).
-      CATCH cx_apj_rt ##NO_HANDLER.
-        " Best effort: the objects stay due, the retry job processes them.
-        " TODO: entry in the application log (logging BAdI)
-    ENDTRY.
+    zcl_prc_job_scheduler=>get( )->schedule_immediately( i_template_name = zcl_prc_retry_job=>c_apj_template_name
+                                                         i_job_text      = |ABAP-PRC: Trigger processing asynch via APJ|
+                                                         i_parameters    = lt_job_parameter ).
   ENDMETHOD.
 
   METHOD process_synchronously.
@@ -104,11 +135,42 @@ CLASS zcl_prc_processing_api IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD create_processed_objects.
-    CHECK i_create_processed_objects IS NOT INITIAL.
+  METHOD create.
+    write( i_objects ).
+  ENDMETHOD.
+
+
+  METHOD create_and_process.
+    DATA(lt_parameters) = write( i_objects ).
+    IF lt_parameters IS INITIAL.
+      RETURN.
+    ENDIF.
+    COMMIT WORK.
+    process_synchronously( lt_parameters ).
+  ENDMETHOD.
+
+
+  METHOD create_and_schedule_bgpf.
+    DATA(lt_parameters) = write( i_objects ).
+    IF lt_parameters IS NOT INITIAL.
+      process_asynchronously_bgpf( lt_parameters ).
+    ENDIF.
+  ENDMETHOD.
+
+
+  METHOD create_and_schedule_job.
+    DATA(lt_parameters) = write( i_objects ).
+    IF lt_parameters IS NOT INITIAL.
+      process_asynchronously_job( lt_parameters ).
+    ENDIF.
+  ENDMETHOD.
+
+
+  METHOD write.
+    CHECK i_objects IS NOT INITIAL.
 
     DATA(objects) = VALUE zif_prc_db_writer=>ty_create-processedobject(
-        FOR k IN i_create_processed_objects
+        FOR k IN i_objects
         ( UUID                        = xco_cp=>uuid( )->value
           ProcessName                 = k-processName
           FactoryClassName            = k-factoryClassName
@@ -129,13 +191,19 @@ CLASS zcl_prc_processing_api IMPLEMENTATION.
     " it once the class is corrected (see ZCL_PRC_PROCESS_LOADER).
     zcl_prc_db_writer=>create( )->save( i_create = VALUE #( processedobject = objects ) ).
 
+    r_parameters = VALUE #( FOR o IN objects
+                            ( selname = zcl_prc_retry_job=>s_uuid sign = 'I' option = 'EQ' low = o-UUID ) ).
+  ENDMETHOD.
+
+
+  METHOD create_processed_objects.
+    CHECK i_create_processed_objects IS NOT INITIAL.
+
+    DATA(lt_processing_parameters) = write( i_create_processed_objects ).
+
     IF i_perform_commit = abap_true.
       COMMIT WORK.
     ENDIF.
-
-    DATA(lt_processing_parameters) = VALUE zif_prc_processing_engine=>tt_parameters(
-        FOR o IN objects
-        ( selname = zcl_prc_retry_job=>s_uuid sign = 'I' option = 'EQ' low = o-UUID ) ).
 
     CASE i_trigger_processing.
       WHEN execution_mode-no_execution.
@@ -143,9 +211,18 @@ CLASS zcl_prc_processing_api IMPLEMENTATION.
       WHEN execution_mode-direct_execution.
         process_synchronously( lt_processing_parameters ).
       WHEN execution_mode-bgpf_execution.
-        process_asynchronously_bgpf( lt_processing_parameters ).
+        TRY.
+            process_asynchronously_bgpf( lt_processing_parameters ).
+          CATCH cx_bgmc ##NO_HANDLER.
+            " Behaviour of this deprecated method: the objects stay due, the retry job processes them
+        ENDTRY.
       WHEN execution_mode-appl_job_execution.
-        process_asynchronously_job( lt_processing_parameters ).
+        TRY.
+            process_asynchronously_job( lt_processing_parameters ).
+          CATCH cx_apj_rt ##NO_HANDLER.
+            " Behaviour of this deprecated method: the objects stay due, the retry job processes them
+        ENDTRY.
     ENDCASE.
   ENDMETHOD.
 ENDCLASS.
+
